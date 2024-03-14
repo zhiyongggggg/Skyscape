@@ -13,7 +13,7 @@ class _HomeState extends State<Home> {
   Map<String, double?> temperatureValues = {};
   Map<String, double?> humidityValues = {};
   Map<String, Map<String, dynamic>> filteredStations = {};
-  List<String> favouritedLocationNames = ['Nanyang Avenue', 'Clementi Road', 'Kim Chuan Road']; // Names for the favourited locations
+  List<String> favouritedLocationNames = ['Nanyang Avenue', 'Clementi Road']; // Names for the favourited locations
   int currentIndex = 0;
 
   void getData(List<String> favouritedLocationNames) async {
