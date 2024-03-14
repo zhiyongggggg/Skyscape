@@ -1,4 +1,3 @@
-import "package:skyscape/screens/authenticate/sign_in.dart";
 import "package:skyscape/screens/home/home.dart";
 import "package:flutter/material.dart";
 import "package:skyscape/screens/authenticate/authenticate.dart";

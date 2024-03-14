@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import "package:skyscape/screens/authenticate/sign_in.dart";
 import "package:skyscape/services/auth.dart";
-import "package:flutter/material.dart";
 import 'package:flutter/gestures.dart';
 
 
