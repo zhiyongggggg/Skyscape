@@ -1,14 +1,26 @@
 import 'package:skyscape/services/auth.dart';
 import 'package:flutter/material.dart';
 
+class Home extends StatefulWidget {
+  const Home({super.key});
+  @override
+  State<Home> createState() => _HomeState();
+}
 
-class Home extends StatelessWidget {
 
+
+  
   // Home({super.key});
-
+class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
-
-  Home({super.key}); //instance of this
+  int currentIndex = 0;
+  final screens = [
+    Center(child: Text('Home', style: TextStyle(fontSize: 60))),
+    Center(child: Text('Search', style: TextStyle(fontSize: 60))),
+    Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
+    Center(child: Text('Settings', style: TextStyle(fontSize: 60))),
+  ]; //edit this part with newly made pages like SearchPage()
+  //Home({super.key}); //instance of this
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -26,6 +38,30 @@ class Home extends StatelessWidget {
               await _auth.signOut();
             },
           )
+        ],
+      ),
+      body: screens[currentIndex], 
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Search',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Calendar',
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+            ), 
         ],
       ),
     );          //can add appbar and everything
