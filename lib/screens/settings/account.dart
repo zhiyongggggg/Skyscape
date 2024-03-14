@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import "package:skyscape/services/auth.dart";
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ProfileEditWidget extends StatefulWidget {
   const ProfileEditWidget({super.key});
@@ -11,6 +15,11 @@ class ProfileEditWidget extends StatefulWidget {
 class _ProfileEditWidgetState extends State<ProfileEditWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  String? NullEmail = FirebaseAuth.instance.currentUser?.email;
+  //String UserEmail = NullEmail?.toUpperCase() ?? "Invalid";
 
   @override
   Widget build(BuildContext context) {
@@ -154,18 +163,31 @@ class _ProfileEditWidgetState extends State<ProfileEditWidget> {
                 decoration: BoxDecoration(
                   color: FlutterFlowTheme.of(context).secondaryBackground,
                 ),
-                child: Align(
-                  alignment: AlignmentDirectional(-1, 0),
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
-                    child: Text(
-                      'Email Address : 123',
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Readex Pro',
-                            fontSize: 16,
-                          ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                      child: Text(
+                        'Email : ',
+                        style: FlutterFlowTheme.of(context).bodyMedium,
+                      ),
                     ),
-                  ),
+                    Align(
+                      alignment: AlignmentDirectional(-1, 0),
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
+                        child: Text(
+                          NullEmail?.toUpperCase() ?? "invalid",
+                          style:
+                              FlutterFlowTheme.of(context).bodyMedium.override(
+                                    fontFamily: 'Readex Pro',
+                                    fontSize: 16,
+                                  ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Padding(

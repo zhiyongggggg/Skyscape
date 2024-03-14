@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:skyscape/screens/settings/profile.dart';
 import 'dart:convert';
+import 'package:skyscape/services/auth.dart';
 import 'dictionaries.dart';
 
 class Home extends StatefulWidget {
@@ -11,11 +13,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
   Map<String, dynamic?> allValues = {};
   Map<String, dynamic?> psiValues = {};
   Map<String, Map<String, dynamic>> filteredStations = {};
   List<String> favouritedLocationNames = ['Admiralty', 'Ang Mo Kio', 'Pasir Ris', 'Yew Tee']; // Names for the favourited locations
-  
   
   int currentIndex = 0;
 
@@ -74,42 +76,24 @@ class _HomeState extends State<Home> {
             label: const Text('logout'),
             onPressed: () async {
               print("logout button is pressed");
-              // Add your logout functionality here
+              await _auth.signOut();
             },
           )
         ],
       ),
-      body: Column(
-        // Removed Center widget
-        mainAxisAlignment: MainAxisAlignment.start, // Align to top
-
+      body: IndexedStack(
+        index: currentIndex,
         children: [
-          for (var location in favouritedLocationNames)
-            Row(  // Wrap each container in a Row
-              mainAxisAlignment: MainAxisAlignment.center, // Center horizontally
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.8, // Set width to 80%
-                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                  padding: EdgeInsets.all(10.0),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 191, 191, 22),
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}'),
-                ),
-              ],
-            ),
+          buildHomeScreen(),
+          Center(child: Text('Search', style: TextStyle(fontSize: 60))),
+          Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
+          ProfileMainWidget(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
+        onTap: (index) => setState(() => currentIndex = index),
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -129,6 +113,30 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget buildHomeScreen() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        for (var location in favouritedLocationNames)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 191, 191, 22),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}'),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }
