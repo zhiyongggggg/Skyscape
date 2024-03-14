@@ -75,24 +75,30 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-    body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        // Removed Center widget
+        mainAxisAlignment: MainAxisAlignment.start, // Align to top
+
         children: [
           for (var location in favouritedLocationNames)
             if (locationValues.containsKey(location))
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 191, 191, 22),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Text('$location : ${locationValues[location]}'),
+              Row(  // Wrap each container in a Row
+                mainAxisAlignment: MainAxisAlignment.center, // Center horizontally
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.8, // Set width to 80%
+                    margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                    padding: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 191, 191, 22),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Text('$location : ${locationValues[location]}'),
+                  ),
+                ],
               ),
         ],
       ),
-    ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
