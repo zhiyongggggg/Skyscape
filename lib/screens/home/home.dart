@@ -10,7 +10,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Map<String, double?> locationValues = {};
+  Map<String, double?> temperatureValues = {};
+  Map<String, double?> humidityValues = {};
+  Map<String, Map<String, dynamic>> filteredStations = {};
   List<String> favouritedLocationNames = ['Nanyang Avenue', 'Clementi Road', 'Kim Chuan Road']; // Names for the favourited locations
   int currentIndex = 0;
 
@@ -21,18 +23,14 @@ class _HomeState extends State<Home> {
     if (response.statusCode == 200) {
       Map<String, dynamic> data = jsonDecode(response.body);
       List<dynamic> stations = data['metadata']['stations'];
-      Map<String, Map<String, dynamic>> filteredStations = {};
-
       // Build filteredStations map
       for (var station in stations) {
         if (favouritedLocationNames.contains(station['name'])) {
           filteredStations[station['name']] = station;
         }
       }
-
       // Clear previous values
-      locationValues.clear();
-
+      temperatureValues.clear();
       List<dynamic> items = data['items'];
       for (var item in items) {
         List<dynamic> readings = item['readings'];
@@ -40,7 +38,32 @@ class _HomeState extends State<Home> {
           String stationName = filteredStations.keys.firstWhere((key) => filteredStations[key]!['id'] == reading['station_id'], orElse: () => '');
           double value = (reading['value'] as num).toDouble();
           if (stationName.isNotEmpty) {
-            locationValues[stationName] = value;
+            temperatureValues[stationName] = value;
+          }
+        }
+      }
+      setState(() {});
+    } else {
+      print('Failed to fetch data: ${response.statusCode}');
+    }
+
+
+    url = 'https://api.data.gov.sg/v1/environment/relative-humidity';
+
+    response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+
+      // Clear previous values
+      humidityValues.clear();
+      List<dynamic> items = data['items'];
+      for (var item in items) {
+        List<dynamic> readings = item['readings'];
+        for (var reading in readings) {
+          String stationName = filteredStations.keys.firstWhere((key) => filteredStations[key]!['id'] == reading['station_id'], orElse: () => '');
+          double value = (reading['value'] as num).toDouble();
+          if (stationName.isNotEmpty) {
+            humidityValues[stationName] = value;
           }
         }
       }
@@ -81,7 +104,7 @@ class _HomeState extends State<Home> {
 
         children: [
           for (var location in favouritedLocationNames)
-            if (locationValues.containsKey(location))
+            if (temperatureValues.containsKey(location))
               Row(  // Wrap each container in a Row
                 mainAxisAlignment: MainAxisAlignment.center, // Center horizontally
                 children: [
@@ -93,7 +116,7 @@ class _HomeState extends State<Home> {
                       color: Color.fromARGB(255, 191, 191, 22),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Text('$location : ${locationValues[location]}'),
+                    child: Text('$location : ${temperatureValues[location]} degree C, ${humidityValues[location]}%'),
                   ),
                 ],
               ),
