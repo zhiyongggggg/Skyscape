@@ -1,28 +1,63 @@
-import 'package:skyscape/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({Key? key}) : super(key: key);
+
   @override
   State<Home> createState() => _HomeState();
 }
 
-
-
-  
-  // Home({super.key});
 class _HomeState extends State<Home> {
-  final AuthService _auth = AuthService();
+  Map<String, double?> locationValues = {};
+  List<String> favouritedLocationNames = ['Nanyang Avenue', 'Clementi Road', 'Kim Chuan Road']; // Names for the favourited locations
   int currentIndex = 0;
-  final screens = [
-    Center(child: Text('Home', style: TextStyle(fontSize: 60))),
-    Center(child: Text('Search', style: TextStyle(fontSize: 60))),
-    Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
-    Center(child: Text('Settings', style: TextStyle(fontSize: 60))),
-  ]; //edit this part with newly made pages like SearchPage()
-  //Home({super.key}); //instance of this
+
+  void getData(List<String> favouritedLocationNames) async {
+    String url = 'https://api.data.gov.sg/v1/environment/air-temperature';
+
+    http.Response response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      List<dynamic> stations = data['metadata']['stations'];
+      Map<String, Map<String, dynamic>> filteredStations = {};
+
+      // Build filteredStations map
+      for (var station in stations) {
+        if (favouritedLocationNames.contains(station['name'])) {
+          filteredStations[station['name']] = station;
+        }
+      }
+
+      // Clear previous values
+      locationValues.clear();
+
+      List<dynamic> items = data['items'];
+      for (var item in items) {
+        List<dynamic> readings = item['readings'];
+        for (var reading in readings) {
+          String stationName = filteredStations.keys.firstWhere((key) => filteredStations[key]!['id'] == reading['station_id'], orElse: () => '');
+          double value = (reading['value'] as num).toDouble();
+          if (stationName.isNotEmpty) {
+            locationValues[stationName] = value;
+          }
+        }
+      }
+      setState(() {});
+    } else {
+      print('Failed to fetch data: ${response.statusCode}');
+    }
+  }
+
   @override
-  Widget build(BuildContext context){
+  void initState() {
+    super.initState();
+    getData(favouritedLocationNames);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[50],
       appBar: AppBar(
@@ -33,37 +68,58 @@ class _HomeState extends State<Home> {
           TextButton.icon(
             icon: const Icon(Icons.person),
             label: const Text('logout'),
-            onPressed: () async{
+            onPressed: () async {
               print("logout button is pressed");
-              await _auth.signOut();
+              // Add your logout functionality here
             },
           )
         ],
       ),
-      body: screens[currentIndex], 
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (var location in favouritedLocationNames)
+            if (locationValues.containsKey(location))
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                padding: EdgeInsets.all(10.0),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 191, 191, 22),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Text('$location : ${locationValues[location]}'),
+              ),
+        ],
+      ),
+    ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
+        onTap: (index) {
+          setState(() {
+            currentIndex = index;
+          });
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            ),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.search),
             label: 'Search',
-            ),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Calendar',
-            ),
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
-            ), 
+          ),
         ],
       ),
-    );          //can add appbar and everything
+    );
   }
 }
