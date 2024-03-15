@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:skyscape/services/auth.dart";
-//import '/backend/backend.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 
@@ -53,27 +54,35 @@ class _ReportWidgetState extends State<ReportWidget> {
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _model = createModel(context, () => ReportModel());
 
-    _model.textController1 ??= TextEditingController();
+    
     _model.textFieldFocusNode1 ??= FocusNode();
 
-    _model.textController2 ??= TextEditingController();
+    
     _model.textFieldFocusNode2 ??= FocusNode();
   }
 
   @override
   void dispose() {
     _model.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    CollectionReference bugReport = FirebaseFirestore.instance.collection('bugReport');
+
     return GestureDetector(
       onTap: () => _model.unfocusNode.canRequestFocus
           ? FocusScope.of(context).requestFocus(_model.unfocusNode)
@@ -139,7 +148,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       TextFormField(
-                        controller: _model.textController1,
+                        controller: titleController,
                         focusNode: _model.textFieldFocusNode1,
                         autofocus: true,
                         obscureText: false,
@@ -203,7 +212,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                             .asValidator(context),
                       ),
                       TextFormField(
-                        controller: _model.textController2,
+                        controller: descriptionController,
                         focusNode: _model.textFieldFocusNode2,
                         autofocus: true,
                         obscureText: false,
@@ -274,7 +283,34 @@ class _ReportWidgetState extends State<ReportWidget> {
                     padding: EdgeInsetsDirectional.fromSTEB(0, 24, 0, 12),
                     child: FFButtonWidget(
                       onPressed: () async {
-                        print("pressed");
+                        final email = FirebaseAuth.instance.currentUser?.email;
+                        final title = titleController.text;
+                        final description = descriptionController.text;
+
+                        final bugReport = {
+                          '1. email': email,
+                          '2. title': title,
+                          '3. description': description,
+                          };
+                        await FirebaseFirestore.instance.collection('bugReport').add(bugReport);
+                        titleController.text = '';
+                        descriptionController.text = '';
+
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Report Sent'),
+                              content: Text('Your bug report has been submitted successfully.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
                       text: 'Submit Ticket',
                       icon: Icon(
