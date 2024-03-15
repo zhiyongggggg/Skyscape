@@ -17,4 +17,30 @@ class DatabaseService {
   Stream<QuerySnapshot> get users {
     return userCollection.snapshots();
   }
+
+  Future<void> saveFavouritedLocations(List<String> locations) async {
+    DocumentReference documentReference = userCollection.doc(uid);
+    DocumentSnapshot snapshot = await documentReference.get();
+    
+    if (snapshot.exists) {
+      // Document exists, update it
+      return await documentReference.update({
+        'favouritedLocations': locations,
+      });
+    } else {
+      // Document doesn't exist, create it
+      return await documentReference.set({
+        'favouritedLocations': locations,
+      });
+    }
+  }
+
+  Future<List<String>> getFavouritedLocations() async {
+    DocumentSnapshot snapshot = await userCollection.doc(uid).get();
+    if (snapshot.exists) {
+      List<dynamic> locations = snapshot.get('favouritedLocations');
+      return locations.map((location) => location.toString()).toList();
+    }
+    return [];
+  }
 }

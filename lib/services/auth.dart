@@ -9,6 +9,8 @@ class AuthService {
   //register with emial&password
   //also sign out in the future tutiral 9
 
+  User? get currentUser => _auth.currentUser;
+
  //focus in sign in annoymously cause its the easiest
   final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;                  //_ underscosre means that the property is private and I can only use it in this file

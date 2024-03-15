@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/settings/profile.dart';
 import 'dart:convert';
 import 'package:skyscape/services/auth.dart';
+import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,7 +20,7 @@ class _HomeState extends State<Home> {
   Map<String, dynamic?> allValues = {};
   Map<String, dynamic?> psiValues = {};
   Map<String, Map<String, dynamic>> filteredStations = {};
-  List<String> favouritedLocationNames = ['Admiralty', 'Ang Mo Kio', 'Pasir Ris', 'Yew Tee']; // Names for the favourited locations
+  List<String> favouritedLocationNames = ['Admiralty', 'Ang Mo Kio', 'Pasir Ris', 'Yew Tee']; // default names
   
   int currentIndex = 0;
 
@@ -60,7 +63,16 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getData(favouritedLocationNames);
+    _getFavouritedLocations();
+    
   }
+  Future<void> _getFavouritedLocations() async {
+  List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid).getFavouritedLocations();
+  setState(() {
+    favouritedLocationNames = locations;
+  });
+  getData(favouritedLocationNames);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +97,8 @@ class _HomeState extends State<Home> {
         index: currentIndex,
         children: [
           buildHomeScreen(),
-          Center(child: Text('Search', style: TextStyle(fontSize: 20))),
+          AddFavouriteLocation(),
+          //Center(child: Text('Search', style: TextStyle(fontSize: 20))),
           Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
           ProfileMainWidget(),
         ],
