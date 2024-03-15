@@ -1,5 +1,8 @@
 import 'package:skyscape/models/newuser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skyscape/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class AuthService {
   //sign in annoymoulsy and with email and password
@@ -7,7 +10,7 @@ class AuthService {
   //also sign out in the future tutiral 9
 
  //focus in sign in annoymously cause its the easiest
-
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
   final FirebaseAuth _auth = FirebaseAuth.instance;                  //_ underscosre means that the property is private and I can only use it in this file
   //an instance of firebaseauth.
 
@@ -53,17 +56,44 @@ class AuthService {
   }
 
 ///////////////////////////Register with email and password///////////////////////
-  Future registerwithEmailAndPassword(String email, String password) async {
+/*
+  Future registerwithEmailAndPassword(String email, String password, String username) async {
     try{
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      await DatabaseService(uid: user!.uid).updateUserData(username);
       return _userfromFirebaseUser(user); //convert firebase user to our own newuserclass user
+
+       
     } catch (e){
       print(e.toString());
       return null;
     }
   }
+*/
 
+
+Future registerwithEmailAndPassword(String email, String password, String username) async {
+  try {
+    // Check if the username already exists in the database
+    QuerySnapshot querySnapshot = await userCollection.where('username', isEqualTo: username).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      // Username already exists
+      return 'Username already taken';
+    }
+
+    UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+    User? user = result.user;
+
+    // Create a new document for the user with the username
+    await DatabaseService(uid: user!.uid).updateUserData(username);
+
+    return _userfromFirebaseUser(user);
+  } catch (e) {
+    print(e.toString());
+    return null;
+  }
+}
 
 
   /////////////////////////////SIGN OUT///////////////////////////////////////////

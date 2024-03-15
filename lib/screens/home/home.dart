@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.yellow[50],
       appBar: AppBar(
         title: const Text('Skyscape'),
-        backgroundColor: Colors.amber[400],
+        backgroundColor: currentIndex == 3 ? Color.fromARGB(255, 189, 235, 191) : Colors.amber[400],
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
         index: currentIndex,
         children: [
           buildHomeScreen(),
-          Center(child: Text('Search', style: TextStyle(fontSize: 60))),
+          Center(child: Text('Search', style: TextStyle(fontSize: 20))),
           Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
           ProfileMainWidget(),
         ],
