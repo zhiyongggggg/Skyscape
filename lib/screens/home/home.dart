@@ -31,7 +31,12 @@ class _HomeState extends State<Home> {
 
   void getData(List<String> favouritedLocationNames, String date) async {
     String url, longitude, latitude, sunSet;
-    double sunsetQuality, humidityQuality, cloudCoverQuality, PSI, PSIRating, PSIQuality;
+    double sunsetQuality,
+        humidityQuality,
+        cloudCoverQuality,
+        PSI,
+        PSIRating,
+        PSIQuality;
     for (var location in favouritedLocationNames) {
       latitude = locationToCoordinatesMapping[location][0].toString();
       longitude = locationToCoordinatesMapping[location][1].toString();
@@ -46,7 +51,8 @@ class _HomeState extends State<Home> {
             11); // Use substring() to exclude the date from the string, only leaving with time
 
         // Now using the sunset timing, we find the weather conditions
-        url = 'https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relative_humidity_2m,cloud_cover&timezone=Asia%2FSingapore&start_hour=${date}T${sunSet}&end_hour=${date}T${sunSet}';
+        url =
+            'https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,relative_humidity_2m,cloud_cover&timezone=Asia%2FSingapore&start_hour=${date}T${sunSet}&end_hour=${date}T${sunSet}';
         response = await http.get(Uri.parse(url));
         if (response.statusCode == 200) {
           Map data = jsonDecode(response.body);
@@ -81,9 +87,9 @@ class _HomeState extends State<Home> {
       humidityQuality = allValues[location][1] * 0.3;
       PSI = allValues[location][4].toDouble();
       if (PSI <= 55) {
-        PSIQuality = 80 + ((55 - PSI)/55 * 20);
+        PSIQuality = 80 + ((55 - PSI) / 55 * 20);
       } else {
-        PSIQuality = 20 + ((250 - PSI)/250 * 80);
+        PSIQuality = 20 + ((250 - PSI) / 250 * 80);
       }
       PSIQuality = PSIQuality * 0.3;
       sunsetQuality = PSIQuality + humidityQuality + PSIQuality;
@@ -104,26 +110,28 @@ class _HomeState extends State<Home> {
     return component < 10 ? '0$component' : '$component';
   }
 
-@override
-void initState() {
-  super.initState();
-  _getFavouritedLocations();
-}
+  @override
+  void initState() {
+    super.initState();
+    _getFavouritedLocations();
+  }
 
-@override
-void didChangeDependencies() {
-  super.didChangeDependencies();
-  _getFavouritedLocations();
-}
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getFavouritedLocations();
+  }
 
-Future<void> _getFavouritedLocations() async {
-  List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid).getFavouritedLocations();
-  setState(() {
-    favouritedLocationNames = locations;
-  });
-  String currentDate = _getCurrentDateInSingapore(); // TODO: Date change according to calender
-  getData(favouritedLocationNames, currentDate);
-}
+  Future<void> _getFavouritedLocations() async {
+    List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid)
+        .getFavouritedLocations();
+    setState(() {
+      favouritedLocationNames = locations;
+    });
+    String currentDate =
+        _getCurrentDateInSingapore(); // TODO: Date change according to calender
+    getData(favouritedLocationNames, currentDate);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -194,13 +202,15 @@ Future<void> _getFavouritedLocations() async {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
-                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                      margin:
+                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                       padding: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
                         color: Color.fromARGB(255, 191, 191, 22),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
+                      child: Text(
+                          '$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
                     ),
                   ],
                 ),
