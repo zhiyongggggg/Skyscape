@@ -51,9 +51,6 @@ class _AddFavouriteLocationState extends State<AddFavouriteLocation> {
 
   Future<void> _saveFavouriteLocations() async {
     await DatabaseService(uid: _auth.currentUser!.uid).saveFavouritedLocations(selectedLocations);
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const Home()),
-    );
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 }

@@ -61,20 +61,24 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getData(favouritedLocationNames);
-    _getFavouritedLocations();
-    
-  }
-  Future<void> _getFavouritedLocations() async {
+void initState() {
+  super.initState();
+  _getFavouritedLocations();
+}
+
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+  _getFavouritedLocations();
+}
+
+Future<void> _getFavouritedLocations() async {
   List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid).getFavouritedLocations();
   setState(() {
     favouritedLocationNames = locations;
   });
   getData(favouritedLocationNames);
 }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
