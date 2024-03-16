@@ -148,17 +148,27 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Skyscape'),
+        backgroundColor: currentIndex == 3
+            ? Color.fromARGB(255, 241, 255, 114)
+            : Colors.amber[400],
+        elevation: 0.0,
+        actions: <Widget>[
+          TextButton.icon(
+            icon: const Icon(Icons.person),
+            label: const Text('logout'),
+            onPressed: () async {
+              print("logout button is pressed");
+              await _auth.signOut();
+            },
+          )
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Colors.orange[200]!, // Lighter shade of orange at the top
-              Colors.orange[300]!, // Medium shade of orange in the middle
-              Colors.orange[400]!, // Darker shade of orange at the bottom
-            ],
+            colors: [Colors.orange[300]!, Colors.orange[200]!],
           ),
         ),
         child: Column(
@@ -182,8 +192,20 @@ class _HomeState extends State<Home> {
                   getData(selectedDateString); // Fetch data for selected date
                 });
               },
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle: TextStyle(color: Colors.white), // Days text color
+                weekendStyle: TextStyle(color: Colors.white), // Weekends text color
+              ),
+              calendarStyle: CalendarStyle(
+                defaultTextStyle: TextStyle(color: Colors.white), // Default text color
+                selectedDecoration: BoxDecoration(
+                  color: Colors.white, // Selected date circle color
+                  shape: BoxShape.circle,
+                ),
+                selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
+              ),
             ),
-
+            SizedBox(height: 10), // Add space between calendar and location widgets
             // Existing content
             Expanded(
               child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
@@ -229,6 +251,7 @@ class _HomeState extends State<Home> {
     );
   }
 
+
   // Function to build loading widget
   Widget _buildLoadingWidget() {
     return Center(
@@ -238,57 +261,51 @@ class _HomeState extends State<Home> {
 
   // Function to build location widgets after data fetch
   Widget _buildLocationWidgets() {
-    return ListView(
-      children: [
-        for (int i = 0; i < favouritedLocationNames.length; i++)
-          Column(
+    return ListView.separated(
+      itemCount: favouritedLocationNames.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider(color: Colors.white); // Add white divider between locations
+      },
+      itemBuilder: (BuildContext context, int index) {
+        var location = favouritedLocationNames[index];
+        return Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          padding: EdgeInsets.all(10.0),
+          child: Row(
             children: [
-              // Thin white line between locations
-              Divider(color: Colors.white),
-              _buildLocationWidget(favouritedLocationNames[i]),
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${allValues[location]?[5]}%',
+                      style: TextStyle(
+                        fontSize: 38, // Adjust the font size as needed
+                        fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      location,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Icon(Icons.sunny), // Sunset icon
+              ),
             ],
           ),
-      ],
-    );
-  }
-
-  // Function to build individual location widget
-  Widget _buildLocationWidget(String location) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-      padding: EdgeInsets.all(10.0),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 3,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${allValues[location]?[5]}%',
-                  style: TextStyle(
-                    fontSize: 38, // Adjust the font size as needed
-                    fontWeight: FontWeight.bold, // Adjust the font weight as needed
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  location,
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Icon(Icons.sunny), // Sunset icon
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
