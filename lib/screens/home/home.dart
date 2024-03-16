@@ -6,6 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
+import 'package:skyscape/screens/home/viewdetails.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -76,7 +77,7 @@ class _HomeState extends State<Home> {
         print('Failed to fetch data: ${response.statusCode}');
       }
 
-      // ======================== PSI ======================== CHANGE
+      // ======================== PSI ======================== 
       url = 'https://api.data.gov.sg/v1/environment/psi';
       response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -181,6 +182,13 @@ class _HomeState extends State<Home> {
               lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
               headerStyle: HeaderStyle(
                 formatButtonVisible: false,
+                titleCentered: true, // Center the month title
+                titleTextStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ), // Change month text color
+                leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white), // Change left arrow color
+                rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white), // Change right arrow color
               ),
               selectedDayPredicate: (DateTime date) {
                 return isSameDay(date, _selectedDate); // Highlight selected date
@@ -205,22 +213,11 @@ class _HomeState extends State<Home> {
                 selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
               ),
             ),
+
             SizedBox(height: 10), // Add space between calendar and location widgets
             // Existing content
             Expanded(
               child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to view details page
-                  },
-                  child: Text('viewDetails'),
-                ),
-              ),
             ),
           ],
         ),
@@ -268,44 +265,53 @@ class _HomeState extends State<Home> {
       },
       itemBuilder: (BuildContext context, int index) {
         var location = favouritedLocationNames[index];
-        return Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${allValues[location]?[5]}%',
-                      style: TextStyle(
-                        fontSize: 38, // Adjust the font size as needed
-                        fontWeight: FontWeight.bold, // Adjust the font weight as needed
-                        color: Colors.white,
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewDetails(location: location)),
+            );
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${allValues[location]?[5]}%',
+                        style: TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Text(
-                      location,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                      Text(
+                        location,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Icon(Icons.sunny), // Sunset icon
-              ),
-            ],
+                Expanded(
+                  flex: 1,
+                  child: Icon(Icons.sunny), // Sunset icon
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
+
 }

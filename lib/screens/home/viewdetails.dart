@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
-class NewDetailsPage extends StatefulWidget {
-  @override
-  _NewDetailsPageState createState() => _NewDetailsPageState();
-}
+class ViewDetails extends StatelessWidget {
+  final String location;
 
-class _NewDetailsPageState extends State<NewDetailsPage> {
+  ViewDetails({required this.location});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('New Details'),
+        title: Text('Details for $location'),
       ),
       body: Center(
-        child: Text('kieran this is for u'),
+        child: Text(
+          'KIERAN work here',
+          style: TextStyle(fontSize: 24),
+        ),
       ),
     );
   }
