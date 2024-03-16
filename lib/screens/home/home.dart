@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
           Map data = jsonDecode(response.body);
           Map<String, dynamic> currentConditions = data["hourly"];
           allValues[location] = [
-            currentConditions["temperature_2m"],
+            currentConditions["temperature_2m"][0],
             currentConditions["relative_humidity_2m"][0],
             currentConditions["cloud_cover"][0],
             sunSet
@@ -104,8 +104,7 @@ class _HomeState extends State<Home> {
     return component < 10 ? '0$component' : '$component';
   }
 
-  @override
-<<<<<<< Updated upstream
+@override
 void initState() {
   super.initState();
   _getFavouritedLocations();
@@ -122,29 +121,10 @@ Future<void> _getFavouritedLocations() async {
   setState(() {
     favouritedLocationNames = locations;
   });
-  getData(favouritedLocationNames);
+  String currentDate = _getCurrentDateInSingapore(); // TODO: Date change according to calender
+  getData(favouritedLocationNames, currentDate);
 }
-=======
-  void initState() {
-    super.initState();
-    String currentDate =
-        _getCurrentDateInSingapore(); // TODO: Date change according to calender
-    getData(favouritedLocationNames, currentDate);
-    _getFavouritedLocations();
-  }
 
-  Future<void> _getFavouritedLocations() async {
-    List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid)
-        .getFavouritedLocations();
-    setState(() {
-      favouritedLocationNames = locations;
-    });
-    String currentDate =
-        _getCurrentDateInSingapore(); // TODO: Date change according to calender
-    getData(favouritedLocationNames, currentDate);
-  }
-
->>>>>>> Stashed changes
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -220,15 +200,10 @@ Future<void> _getFavouritedLocations() async {
                         color: Color.fromARGB(255, 191, 191, 22),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}'),                  ),
+                      child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
+                    ),
                   ],
                 ),
-<<<<<<< Updated upstream
-=======
-                child: Text(
-                    '$location : Temp-${allValues[location]?[0][0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
-              ),
->>>>>>> Stashed changes
             ],
           ),
         ),
