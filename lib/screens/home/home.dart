@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:skyscape/screens/Search/search.dart';
-import 'package:skyscape/screens/home/viewdetails.dart';
-import 'package:skyscape/screens/settings/profile.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
@@ -18,8 +17,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   Map<String, dynamic?> allValues = {};
-  Map<String, dynamic?> psiValues = {};
-  Map<String, Map<String, dynamic>> filteredStations = {};
   List<String> favouritedLocationNames = [
     'Admiralty',
     'Ang Mo Kio',
@@ -28,8 +25,13 @@ class _HomeState extends State<Home> {
   ]; // default names
 
   int currentIndex = 0;
+  DateTime _selectedDate = DateTime.now();
 
-  void getData(List<String> favouritedLocationNames, String date) async {
+  void getData(String date) async {
+    setState(() {
+      allValues.clear(); // Clear previous data
+    });
+
     String url, longitude, latitude, sunSet;
     double sunsetQuality,
         humidityQuality,
@@ -37,6 +39,7 @@ class _HomeState extends State<Home> {
         PSI,
         PSIRating,
         PSIQuality;
+
     for (var location in favouritedLocationNames) {
       latitude = locationToCoordinatesMapping[location][0].toString();
       longitude = locationToCoordinatesMapping[location][1].toString();
@@ -129,8 +132,8 @@ class _HomeState extends State<Home> {
       favouritedLocationNames = locations;
     });
     String currentDate =
-        _getCurrentDateInSingapore(); // TODO: Date change according to calender
-    getData(favouritedLocationNames, currentDate);
+        _getCurrentDateInSingapore(); // TODO: Date change according to calendar
+    getData(currentDate);
   }
 
   @override
@@ -154,14 +157,63 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: IndexedStack(
-        index: currentIndex,
+      body: Column(
         children: [
-          buildHomeScreen(),
-          AddFavouriteLocation(),
-          //Center(child: Text('Search', style: TextStyle(fontSize: 20))),
-          Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
-          ProfileMainWidget(),
+          // Single row calendar
+          TableCalendar(
+            calendarFormat: CalendarFormat.week,
+            focusedDay: _selectedDate,
+            firstDay: DateTime.now().subtract(Duration(days: 365)),
+            lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
+            headerStyle: HeaderStyle(
+              formatButtonVisible: false,
+            ),
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDate = selectedDay; // Highlight selected date
+                String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
+                getData(selectedDateString); // Fetch data for selected date
+              });
+            },
+          ),
+          // Existing content
+          Expanded(
+            child: ListView(
+              children: [
+                for (var location in favouritedLocationNames)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                        padding: EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(255, 191, 191, 22),
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: allValues.isNotEmpty
+                            ? Text(
+                                '$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}')
+                            : Text('Loading...'), // Display loading text if data is not yet fetched
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: ElevatedButton(
+                onPressed: () {
+                  // Navigate to view details page
+                },
+                child: Text('viewDetails'),
+              ),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -187,52 +239,6 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget buildHomeScreen() {
-    return Column(
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              for (var location in favouritedLocationNames)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      margin:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 191, 191, 22),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Text(
-                          '$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
-                    ),
-                  ],
-                ),
-            ],
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewDetailsPage()),
-                );
-              },
-              child: Text('viewDetails'),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
