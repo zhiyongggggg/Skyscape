@@ -20,12 +20,7 @@ class _HomeState extends State<Home> {
   Map<String, dynamic?> allValues = {};
   Map<String, dynamic?> psiValues = {};
   Map<String, Map<String, dynamic>> filteredStations = {};
-  List<String> favouritedLocationNames = [
-    'Admiralty',
-    'Ang Mo Kio',
-    'Pasir Ris',
-    'Yew Tee'
-  ]; // default names
+  List<String> favouritedLocationNames = [];
 
   int currentIndex = 0;
 
