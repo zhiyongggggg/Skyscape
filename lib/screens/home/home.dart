@@ -27,9 +27,12 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   DateTime _selectedDate = DateTime.now();
 
+  bool isLoading = false; // Flag for loading state
+
   void getData(String date) async {
     setState(() {
       allValues.clear(); // Clear previous data
+      isLoading = true; // Set loading state to true before fetching data
     });
 
     String url, longitude, latitude, sunSet;
@@ -98,6 +101,10 @@ class _HomeState extends State<Home> {
       sunsetQuality = PSIQuality + humidityQuality + PSIQuality;
       allValues[location].add(sunsetQuality.toStringAsFixed(2));
     }
+
+    setState(() {
+      isLoading = false; // Set loading state to false after fetching data
+    });
   }
 
   String _getCurrentDateInSingapore() {
@@ -139,82 +146,62 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[50],
       appBar: AppBar(
         title: const Text('Skyscape'),
-        backgroundColor: currentIndex == 3
-            ? Color.fromARGB(255, 189, 235, 191)
-            : Colors.amber[400],
-        elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('logout'),
-            onPressed: () async {
-              print("logout button is pressed");
-              await _auth.signOut();
-            },
-          )
-        ],
       ),
-      body: Column(
-        children: [
-          // Single row calendar
-          TableCalendar(
-            calendarFormat: CalendarFormat.week,
-            focusedDay: _selectedDate,
-            firstDay: DateTime.now().subtract(Duration(days: 365)),
-            lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
-            headerStyle: HeaderStyle(
-              formatButtonVisible: false,
-            ),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDate = selectedDay; // Highlight selected date
-                String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
-                getData(selectedDateString); // Fetch data for selected date
-              });
-            },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.orange[200]!, // Lighter shade of orange at the top
+              Colors.orange[300]!, // Medium shade of orange in the middle
+              Colors.orange[400]!, // Darker shade of orange at the bottom
+            ],
           ),
-          // Existing content
-          Expanded(
-            child: ListView(
-              children: [
-                for (var location in favouritedLocationNames)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                        padding: EdgeInsets.all(10.0),
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 191, 191, 22),
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: allValues.isNotEmpty
-                            ? Text(
-                                '$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}')
-                            : Text('Loading...'), // Display loading text if data is not yet fetched
-                      ),
-                    ],
-                  ),
-              ],
+        ),
+        child: Column(
+          children: [
+            // Single row calendar
+            TableCalendar(
+              calendarFormat: CalendarFormat.week,
+              focusedDay: _selectedDate,
+              firstDay: DateTime.now().subtract(Duration(days: 365)),
+              lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+              ),
+              selectedDayPredicate: (DateTime date) {
+                return isSameDay(date, _selectedDate); // Highlight selected date
+              },
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDate = selectedDay; // Highlight selected date
+                  String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
+                  getData(selectedDateString); // Fetch data for selected date
+                });
+              },
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: ElevatedButton(
-                onPressed: () {
-                  // Navigate to view details page
-                },
-                child: Text('viewDetails'),
+
+            // Existing content
+            Expanded(
+              child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Navigate to view details page
+                  },
+                  child: Text('viewDetails'),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -236,6 +223,69 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Function to build loading widget
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: CircularProgressIndicator(), // Display loading indicator
+    );
+  }
+
+  // Function to build location widgets after data fetch
+  Widget _buildLocationWidgets() {
+    return ListView(
+      children: [
+        for (int i = 0; i < favouritedLocationNames.length; i++)
+          Column(
+            children: [
+              // Thin white line between locations
+              Divider(color: Colors.white),
+              _buildLocationWidget(favouritedLocationNames[i]),
+            ],
+          ),
+      ],
+    );
+  }
+
+  // Function to build individual location widget
+  Widget _buildLocationWidget(String location) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+      padding: EdgeInsets.all(10.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${allValues[location]?[5]}%',
+                  style: TextStyle(
+                    fontSize: 38, // Adjust the font size as needed
+                    fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  location,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Icon(Icons.sunny), // Sunset icon
           ),
         ],
       ),
