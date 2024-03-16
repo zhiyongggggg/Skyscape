@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:skyscape/screens/Search/search.dart';
+import 'package:skyscape/screens/home/viewdetails.dart';
 import 'package:skyscape/screens/settings/profile.dart';
 import 'dart:convert';
 import 'package:skyscape/services/auth.dart';
@@ -131,24 +132,43 @@ class _HomeState extends State<Home> {
 
   Widget buildHomeScreen() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        for (var location in favouritedLocationNames)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        Expanded(
+          child: ListView(
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                padding: EdgeInsets.all(10.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 191, 191, 22),
-                  borderRadius: BorderRadius.circular(10.0),
+              for (var location in favouritedLocationNames)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                      padding: EdgeInsets.all(10.0),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 191, 191, 22),
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                      child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}'),                  ),
+                  ],
                 ),
-                child: Text('$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${psiValues[location]}%, Sunset: ${allValues[location]?[3]}'),
-              ),
             ],
           ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NewDetailsPage()),
+                );
+              },
+              child: Text('viewDetails'),
+            ),
+          ),
+        ),
       ],
     );
   }
