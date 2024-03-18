@@ -29,40 +29,36 @@ class _ViewDetailsState extends State<ViewDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Skyscape'),
+        title: const Text('View Details'),
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
         elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('logout'),
-            onPressed: () async {
-              print("logout button is pressed");
-              await _auth.signOut();
-            },
-          )
-        ],
-      ),
+      //   actions: <Widget>[
+      //     TextButton.icon(
+      //       icon: const Icon(Icons.person),
+      //       label: const Text('logout'),
+      //       onPressed: () async {
+      //         print("logout button is pressed");
+      //         await _auth.signOut();
+      //       },
+      //     )
+      //   ],
+       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.orange[200]!, Colors.orange[300]!],
+            colors: [Colors.orange[200]!, Colors.orange[300]!],  
           ),
         ),
-        child: IndexedStack(
-          index: currentIndex,
+        child: Column(
           children: [
+          //buildbackground(),
           buildlocation(),
           ],
         ),
-        //   index: currentIndex,
-        //   children: [
-        //     buildHomeScreen()],
-        // ),
       )
     );
   }
@@ -145,11 +141,334 @@ class _ViewDetailsState extends State<ViewDetails> {
 }
 
   @override
-  Widget buildlocation() {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Testing to see if this works, if you see it, then it works'),
+  Widget buildbackground() {
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.orange[200]!, Colors.orange[300]!],
+          ),
       ),
     );
   }
+
+  Widget buildlocation(){
+    return Container(
+        height: 400,
+          child: Align(
+            alignment: AlignmentDirectional(1.0, -1.0),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFFFDD00),
+                    Colors.orange,
+                  ],
+                  stops: [0.0, 1.0],
+                  begin: AlignmentDirectional(0.0, -1.0),
+                  end: AlignmentDirectional(0, 1.0),
+                ),
+              ),
+              child: Align(
+                alignment: AlignmentDirectional(1.0, -1.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Opacity(
+                          opacity: 0.5,
+                          child: Align(
+                            alignment: AlignmentDirectional(0.0, 0.0),
+                            child: Container(
+                              width: 352.0,
+                              height: 283.0,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(30.0),
+                                  bottomRight: Radius.circular(30.0),
+                                  topLeft: Radius.circular(30.0),
+                                  topRight: Radius.circular(30.0),
+                                ),
+                                shape: BoxShape.rectangle,
+                              ),
+                              child: Container(
+                                width: 0.0,
+                                height: 0.0,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(30.0),
+                                    bottomRight: Radius.circular(30.0),
+                                    topLeft: Radius.circular(30.0),
+                                    topRight: Radius.circular(30.0),
+                                  ),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Align(
+                                      alignment: AlignmentDirectional(0.0, 0.0),
+                                      child: Padding(
+                                        padding: EdgeInsetsDirectional.fromSTEB(
+                                            0.0, 10.0, 0.0, 0.0),
+                                        child: Container(
+                                          width: 302.0,
+                                          height: 129.0,
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(30.0),
+                                              bottomRight:
+                                                  Radius.circular(30.0),
+                                              topLeft: Radius.circular(30.0),
+                                              topRight: Radius.circular(30.0),
+                                            ),
+                                          ),
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, -1.0),
+                                                child: Padding(
+                                                  padding: EdgeInsetsDirectional
+                                                      .fromSTEB(
+                                                          0.0, 20.0, 0.0, 0.0),
+                                                  child: Text(
+                                                    'Prime Time',
+                                                    style: TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                                                        ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.36),
+                                                child: Container(
+                                                  width: 304.0,
+                                                  height: 36.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                  ),
+                                                  child: Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.0, -1.0),
+                                                    child: Text(
+                                                      '7:02 PM',
+                                                      style:
+                                                          TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsetsDirectional.fromSTEB(
+                                          0.0, 20.0, 0.0, 0.0),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.max,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red,
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(30.0),
+                                                bottomRight:
+                                                    Radius.circular(30.0),
+                                                topLeft: Radius.circular(30.0),
+                                                topRight: Radius.circular(30.0),
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 10.0,
+                                                                0.0, 0.0),
+                                                    child: Text(
+                                                      'Cloud Cover',
+                                                      style:
+                                                          TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.05, 0.35),
+                                                  child: Container(
+                                                    width: 80.0,
+                                                    height: 48.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red,
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(30.0),
+                                                bottomRight:
+                                                    Radius.circular(30.0),
+                                                topLeft: Radius.circular(30.0),
+                                                topRight: Radius.circular(30.0),
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 10.0,
+                                                                0.0, 0.0),
+                                                    child: Text(
+                                                      'Air Quality',
+                                                      style:
+                                                          TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.05, 0.35),
+                                                  child: Container(
+                                                    width: 80.0,
+                                                    height: 48.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red,
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft:
+                                                    Radius.circular(30.0),
+                                                bottomRight:
+                                                    Radius.circular(30.0),
+                                                topLeft: Radius.circular(30.0),
+                                                topRight: Radius.circular(30.0),
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.0, -1.0),
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsetsDirectional
+                                                            .fromSTEB(0.0, 10.0,
+                                                                0.0, 0.0),
+                                                    child: Text(
+                                                      'Humidity',
+                                                      style:
+                                                          TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                                                              ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          0.05, 0.35),
+                                                  child: Container(
+                                                    width: 80.0,
+                                                    height: 48.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors
+                                                              .white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+  }
 }
+
+
