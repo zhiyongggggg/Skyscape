@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:skyscape/screens/Search/search.dart';
-import 'package:skyscape/screens/home/viewdetails.dart';
-import 'package:skyscape/screens/settings/profile.dart';
 import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:skyscape/screens/Search/search.dart';
+import 'package:skyscape/screens/settings/profile.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
+import 'package:skyscape/screens/home/viewdetails.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -18,20 +20,28 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   Map<String, dynamic?> allValues = {};
-  Map<String, dynamic?> psiValues = {};
-  Map<String, Map<String, dynamic>> filteredStations = {};
-  List<String> favouritedLocationNames = [];
+
+  List<String> favouritedLocationNames = []; // default names
+
 
   int currentIndex = 0;
+  DateTime _selectedDate = DateTime.now();
 
-  void getData(List<String> favouritedLocationNames, String date) async {
+  bool isLoading = false; // Flag for loading state
+
+  void getData(String date) async {
+    setState(() {
+      allValues.clear(); // Clear previous data
+      isLoading = true; // Set loading state to true before fetching data
+    });
+
     String url, longitude, latitude, sunSet;
     double sunsetQuality,
         humidityQuality,
         cloudCoverQuality,
         PSI,
-        PSIRating,
         PSIQuality;
+
     for (var location in favouritedLocationNames) {
       latitude = locationToCoordinatesMapping[location][0].toString();
       longitude = locationToCoordinatesMapping[location][1].toString();
@@ -65,7 +75,7 @@ class _HomeState extends State<Home> {
         print('Failed to fetch data: ${response.statusCode}');
       }
 
-      // ======================== PSI ======================== CHANGE
+      // ======================== PSI ======================== 
       url = 'https://api.data.gov.sg/v1/environment/psi';
       response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -87,9 +97,13 @@ class _HomeState extends State<Home> {
         PSIQuality = 20 + ((250 - PSI) / 250 * 80);
       }
       PSIQuality = PSIQuality * 0.3;
-      sunsetQuality = PSIQuality + humidityQuality + PSIQuality;
+      sunsetQuality = cloudCoverQuality + humidityQuality + PSIQuality;
       allValues[location].add(sunsetQuality.toStringAsFixed(2));
     }
+
+    setState(() {
+      isLoading = false; // Set loading state to false after fetching data
+    });
   }
 
   String _getCurrentDateInSingapore() {
@@ -124,18 +138,17 @@ class _HomeState extends State<Home> {
       favouritedLocationNames = locations;
     });
     String currentDate =
-        _getCurrentDateInSingapore(); // TODO: Date change according to calender
-    getData(favouritedLocationNames, currentDate);
+        _getCurrentDateInSingapore(); // TODO: Date change according to calendar
+    getData(currentDate);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[50],
       appBar: AppBar(
         title: const Text('Skyscape'),
         backgroundColor: currentIndex == 3
-            ? Color.fromARGB(255, 189, 235, 191)
+            ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
         elevation: 0.0,
         actions: <Widget>[
@@ -149,15 +162,23 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: IndexedStack(
-        index: currentIndex,
-        children: [
-          buildHomeScreen(),
-          AddFavouriteLocation(),
-          //Center(child: Text('Search', style: TextStyle(fontSize: 20))),
-          Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
-          ProfileMainWidget(),
-        ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.orange[300]!, Colors.orange[200]!],
+          ),
+        ),
+        child: IndexedStack(
+          index: currentIndex,
+          children: [
+            buildHomeScreen(),
+            AddFavouriteLocation(),
+            Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
+            ProfileMainWidget(),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -188,46 +209,116 @@ class _HomeState extends State<Home> {
   Widget buildHomeScreen() {
     return Column(
       children: [
-        Expanded(
-          child: ListView(
-            children: [
-              for (var location in favouritedLocationNames)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      margin:
-                          EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-                      padding: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 191, 191, 22),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Text(
-                          '$location : Temp-${allValues[location]?[0]}, Humidity-${allValues[location]?[1]}%, CC-${allValues[location]?[2]}%, PSI-${allValues[location]?[4]}%, Sunset: ${allValues[location]?[3]}, Sunset Quality: ${allValues[location]?[5]}'),
-                    ),
-                  ],
-                ),
-            ],
+        // Single row calendar
+        TableCalendar(
+          calendarFormat: CalendarFormat.week,
+          focusedDay: _selectedDate,
+          firstDay: DateTime.now().subtract(Duration(days: 365)),
+          lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
+          headerStyle: HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true, // Center the month title
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ), // Change month text color
+            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white), // Change left arrow color
+            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white), // Change right arrow color
+          ),
+          selectedDayPredicate: (DateTime date) {
+            return isSameDay(date, _selectedDate); // Highlight selected date
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDate = selectedDay; // Highlight selected date
+              String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
+              getData(selectedDateString); // Fetch data for selected date
+            });
+          },
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(color: Colors.white), // Days text color
+            weekendStyle: TextStyle(color: Colors.white), // Weekends text color
+          ),
+          calendarStyle: CalendarStyle(
+            defaultTextStyle: TextStyle(color: Colors.white), // Default text color
+            selectedDecoration: BoxDecoration(
+              color: Colors.white, // Selected date circle color
+              shape: BoxShape.circle,
+            ),
+            selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
           ),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.all(20),
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NewDetailsPage()),
-                );
-              },
-              child: Text('viewDetails'),
-            ),
-          ),
+        SizedBox(height: 10),
+        // Existing content
+        Expanded(
+          child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
         ),
       ],
+    );
+  }
+
+  // Function to build loading widget
+  Widget _buildLoadingWidget() {
+    return Center(
+      child: CircularProgressIndicator(), // Display loading indicator
+    );
+  }
+
+  // Function to build location widgets after data fetch
+  Widget _buildLocationWidgets() {
+    return ListView.separated(
+      itemCount: favouritedLocationNames.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider(color: Colors.white); // Add white divider between locations
+      },
+      itemBuilder: (BuildContext context, int index) {
+        var location = favouritedLocationNames[index];
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewDetails(location: location)),
+            );
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+            padding: EdgeInsets.all(10.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${allValues[location]?[5]}%',
+                        style: TextStyle(
+                          fontSize: 38, // Adjust the font size as needed
+                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        location,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Icon(Icons.sunny), // Sunset icon
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
