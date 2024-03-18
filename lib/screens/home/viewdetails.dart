@@ -155,8 +155,9 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   Widget buildlocation(){
     return Container(
-        height: 400,
-          child: Align(
+        height: 700,
+        child: Padding(padding: EdgeInsets.fromLTRB(0,200,0,0),  
+            child: Align(
             alignment: AlignmentDirectional(1.0, -1.0),
             child: Container(
               width: double.infinity,
@@ -467,6 +468,7 @@ class _ViewDetailsState extends State<ViewDetails> {
               ),
             ),
           ),
+        ),
         );
   }
 }
