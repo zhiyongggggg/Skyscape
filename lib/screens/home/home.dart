@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:skyscape/screens/Search/search.dart';
+import 'package:skyscape/screens/settings/profile.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
@@ -172,53 +174,13 @@ class _HomeState extends State<Home> {
             colors: [Colors.orange[300]!, Colors.orange[200]!],
           ),
         ),
-        child: Column(
+        child: IndexedStack(
+          index: currentIndex,
           children: [
-            // Single row calendar
-            TableCalendar(
-              calendarFormat: CalendarFormat.week,
-              focusedDay: _selectedDate,
-              firstDay: DateTime.now().subtract(Duration(days: 365)),
-              lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
-              headerStyle: HeaderStyle(
-                formatButtonVisible: false,
-                titleCentered: true, // Center the month title
-                titleTextStyle: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ), // Change month text color
-                leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white), // Change left arrow color
-                rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white), // Change right arrow color
-              ),
-              selectedDayPredicate: (DateTime date) {
-                return isSameDay(date, _selectedDate); // Highlight selected date
-              },
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(() {
-                  _selectedDate = selectedDay; // Highlight selected date
-                  String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
-                  getData(selectedDateString); // Fetch data for selected date
-                });
-              },
-              daysOfWeekStyle: DaysOfWeekStyle(
-                weekdayStyle: TextStyle(color: Colors.white), // Days text color
-                weekendStyle: TextStyle(color: Colors.white), // Weekends text color
-              ),
-              calendarStyle: CalendarStyle(
-                defaultTextStyle: TextStyle(color: Colors.white), // Default text color
-                selectedDecoration: BoxDecoration(
-                  color: Colors.white, // Selected date circle color
-                  shape: BoxShape.circle,
-                ),
-                selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
-              ),
-            ),
-
-            SizedBox(height: 10), // Add space between calendar and location widgets
-            // Existing content
-            Expanded(
-              child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
-            ),
+            buildHomeScreen(),
+            AddFavouriteLocation(),
+            Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
+            ProfileMainWidget(),
           ],
         ),
       ),
@@ -248,6 +210,56 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget buildHomeScreen() {
+    return Column(
+      children: [
+        // Single row calendar
+        TableCalendar(
+          calendarFormat: CalendarFormat.week,
+          focusedDay: _selectedDate,
+          firstDay: DateTime.now().subtract(Duration(days: 365)),
+          lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
+          headerStyle: HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true, // Center the month title
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+            ), // Change month text color
+            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white), // Change left arrow color
+            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white), // Change right arrow color
+          ),
+          selectedDayPredicate: (DateTime date) {
+            return isSameDay(date, _selectedDate); // Highlight selected date
+          },
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDate = selectedDay; // Highlight selected date
+              String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
+              getData(selectedDateString); // Fetch data for selected date
+            });
+          },
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekdayStyle: TextStyle(color: Colors.white), // Days text color
+            weekendStyle: TextStyle(color: Colors.white), // Weekends text color
+          ),
+          calendarStyle: CalendarStyle(
+            defaultTextStyle: TextStyle(color: Colors.white), // Default text color
+            selectedDecoration: BoxDecoration(
+              color: Colors.white, // Selected date circle color
+              shape: BoxShape.circle,
+            ),
+            selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
+          ),
+        ),
+        SizedBox(height: 10),
+        // Existing content
+        Expanded(
+          child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
+        ),
+      ],
+    );
+  }
 
   // Function to build loading widget
   Widget _buildLoadingWidget() {
@@ -313,5 +325,4 @@ class _HomeState extends State<Home> {
       },
     );
   }
-
 }
