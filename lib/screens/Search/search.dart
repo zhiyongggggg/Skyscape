@@ -61,42 +61,50 @@ class _AddFavouriteLocationState extends State<AddFavouriteLocation> {
                 ),
               ),
             ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: filteredLocations.length,
-                itemBuilder: (context, index) {
-                  final location = filteredLocations[index];
-                  return CheckboxListTile(
-                    title: Text(location),
-                    value: selectedLocations.contains(location),
-                    onChanged: (value) {
-                      setState(() {
-                        if (value != null && value) {
-                          selectedLocations.add(location);
-                        } else {
-                          selectedLocations.remove(location);
-                        }
-                      });
-                    },
-                  );
-                },
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredLocations.length,
+                  itemBuilder: (context, index) {
+                    final location = filteredLocations[index];
+                    return ListTile(
+                      title: Text(location),
+                      trailing: IconButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () {
+                          _saveFavouriteLocation(location);
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),
-      floatingActionButton: selectedLocations.isNotEmpty
-          ? FloatingActionButton(
-              onPressed: _saveFavouriteLocations,
-              child: const Icon(Icons.save),
-            )
-          : null,
+    
+          
     );
   }
 
-  Future<void> _saveFavouriteLocations() async {
-    await DatabaseService(uid: _auth.currentUser!.uid)
-        .saveFavouritedLocations(selectedLocations);
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-  }
+  Future<void> _saveFavouriteLocation(String location) async {
+    List<String> savedLocations = await DatabaseService(uid: _auth.currentUser!.uid).getFavouritedLocations();
+    if (savedLocations.contains(location)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$location is already saved'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    } else {
+      await DatabaseService(uid: _auth.currentUser!.uid).saveFavouritedLocation(location);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$location added to favourites'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    }
+    
+  } 
 }
