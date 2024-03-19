@@ -280,6 +280,7 @@ class _HomeState extends State<Home> {
             thickness: 2, // Set the thickness of the divider
           ),
         );
+
       },
       itemBuilder: (BuildContext context, int index) {
         var location = favouritedLocationNames[index];
@@ -291,57 +292,65 @@ class _HomeState extends State<Home> {
             );
           },
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
-            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
-            padding: EdgeInsets.all(1.0),
+            margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
               children: [
-                Expanded(
-                  flex: 3,
-
-                  child: Padding(
-                    padding: EdgeInsets.only(right: 10.0), // Add padding between column and image
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${allValues[location]?[5]}%',
-                          style: TextStyle(
-                            fontSize: 52, 
-                            fontWeight: FontWeight.bold, 
-                            color: Colors.white,
-                          ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20, left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+                    children: [
+                      Text(
+                        '${allValues[location]?[5]}%',
+                        style: TextStyle(
+                          fontSize: 52, 
+                          fontWeight: FontWeight.bold, 
+                          color: Colors.white,
 
                         ),
-                        Text(
-                          location,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                      ),
+                      Text(
+                        location,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                    ]
                   ),
                 ),
-                Expanded(
 
-                  flex: 2,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(5), 
-                    child: Image.asset(
-                      _getSunIconPath(double.parse(allValues[location][5])),
-                      height: 80,
-                      fit: BoxFit.fill,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end, 
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _removeLocation(location);
+                      },
+                      child: Icon(Icons.delete, color: Colors.black),
                     ),
-
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 7, right: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(5), 
+                        child: Image.asset(
+                          _getSunIconPath(double.parse(allValues[location][5])),
+                          width: 140,
+                          height: 80,
+                          fit: BoxFit.fill,
+                        ),
+                      )
+                    ),
+                  ],
                 ),
-              ],
+              ]
             ),
-          ),
+          )
         );
+
       },
     );
   }
