@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/settings/profile.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -98,7 +100,7 @@ class _HomeState extends State<Home> {
       }
       PSIQuality = PSIQuality * 0.3;
       sunsetQuality = cloudCoverQuality + humidityQuality + PSIQuality;
-      allValues[location].add(sunsetQuality.toStringAsFixed(2));
+      allValues[location].add(sunsetQuality.toStringAsFixed(1));
     }
 
     setState(() {
@@ -269,7 +271,13 @@ class _HomeState extends State<Home> {
     return ListView.separated(
       itemCount: favouritedLocationNames.length,
       separatorBuilder: (BuildContext context, int index) {
-        return Divider(color: Colors.white); // Add white divider between locations
+        return Container(
+          width: MediaQuery.of(context).size.width * 0.8, // 80% of the screen width
+          child: Divider(
+            color: Colors.white.withOpacity(0.5), // Slightly translucent white color
+            thickness: 2, // Set the thickness of the divider
+          ),
+        );
       },
       itemBuilder: (BuildContext context, int index) {
         var location = favouritedLocationNames[index];
@@ -282,37 +290,47 @@ class _HomeState extends State<Home> {
           },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
-            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 30.0),
+            padding: EdgeInsets.all(1.0),
             child: Row(
               children: [
                 Expanded(
                   flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${allValues[location]?[5]}%',
-                        style: TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
-                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
-                          color: Colors.white,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 10.0), // Add padding between column and image
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${allValues[location]?[5]}%',
+                          style: TextStyle(
+                            fontSize: 52, 
+                            fontWeight: FontWeight.bold, 
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Text(
-                        location,
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        Text(
+                          location,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Expanded(
-                  flex: 1,
-                  child: Icon(Icons.sunny), // Sunset icon
+                  flex: 2,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(5), 
+                    child: Image.asset(
+                      _getSunIconPath(double.parse(allValues[location][5])),
+                      height: 80,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -321,4 +339,16 @@ class _HomeState extends State<Home> {
       },
     );
   }
+
+  String _getSunIconPath(double sunSetQuality) {
+    Random random = Random();
+    int randomNumber = random.nextInt(4) + 1;
+
+    if (sunSetQuality > 85) {
+      return 'assets/good$randomNumber.jpeg';
+    } else {
+      return 'assets/bad$randomNumber.jpeg';
+    }
+  }
+
 }
