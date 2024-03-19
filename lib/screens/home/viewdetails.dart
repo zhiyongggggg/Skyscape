@@ -155,8 +155,7 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   Widget buildlocation(){
     return Container(
-        height: 700,
-        child: Padding(padding: EdgeInsets.fromLTRB(0,200,0,0),  
+        height: 700,  
             child: Align(
             alignment: AlignmentDirectional(1.0, -1.0),
             child: Container(
@@ -172,6 +171,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                   end: AlignmentDirectional(0, 1.0),
                 ),
               ),
+              child: Padding(padding: EdgeInsets.fromLTRB(0,330,0,0),
               child: Align(
                 alignment: AlignmentDirectional(1.0, -1.0),
                 child: Column(
@@ -250,7 +250,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                   child: Text(
                                                     'Prime Time',
                                                     style: TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
+                          fontSize: 30, // Adjust the font size as needed
                           fontWeight: FontWeight.bold, // Adjust the font weight as needed
                           color: Colors.white,
                                                         ),
@@ -274,7 +274,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       '7:02 PM',
                                                       style:
                                                           TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
+                          fontSize: 35, // Adjust the font size as needed
                           fontWeight: FontWeight.bold, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
@@ -325,8 +325,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       'Cloud Cover',
                                                       style:
                                                           TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
-                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          fontSize: 15, // Adjust the font size as needed
+                          fontWeight: FontWeight.normal, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
                                                     ),
@@ -377,8 +377,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       'Air Quality',
                                                       style:
                                                           TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
-                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          fontSize: 15, // Adjust the font size as needed
+                          fontWeight: FontWeight.normal, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
                                                     ),
@@ -429,8 +429,8 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       'Humidity',
                                                       style:
                                                           TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
-                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          fontSize: 15, // Adjust the font size as needed
+                          fontWeight: FontWeight.normal, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
                                                     ),
