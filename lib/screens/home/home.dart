@@ -23,7 +23,6 @@ class _HomeState extends State<Home> {
 
   List<String> favouritedLocationNames = []; // default names
 
-
   int currentIndex = 0;
   DateTime _selectedDate = DateTime.now();
 
@@ -142,6 +141,13 @@ class _HomeState extends State<Home> {
     getData(currentDate);
   }
 
+  Future<void> _removeLocation(String location) async {
+    await DatabaseService(uid: _auth.currentUser!.uid).removeFavouritedLocation(location);
+    setState(() {
+      favouritedLocationNames.remove(location);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,47 +215,45 @@ class _HomeState extends State<Home> {
   Widget buildHomeScreen() {
     return Column(
       children: [
-        // Single row calendar
         TableCalendar(
           calendarFormat: CalendarFormat.week,
           focusedDay: _selectedDate,
           firstDay: DateTime.now().subtract(Duration(days: 365)),
-          lastDay: DateTime.now().add(Duration(days: 7)), // Max 7 days ahead
+          lastDay: DateTime.now().add(Duration(days: 7)),
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
-            titleCentered: true, // Center the month title
+            titleCentered: true,
             titleTextStyle: TextStyle(
               color: Colors.white,
               fontSize: 20,
-            ), // Change month text color
-            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white), // Change left arrow color
-            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white), // Change right arrow color
+            ),
+            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
           ),
           selectedDayPredicate: (DateTime date) {
-            return isSameDay(date, _selectedDate); // Highlight selected date
+            return isSameDay(date, _selectedDate);
           },
           onDaySelected: (selectedDay, focusedDay) {
             setState(() {
-              _selectedDate = selectedDay; // Highlight selected date
+              _selectedDate = selectedDay;
               String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
-              getData(selectedDateString); // Fetch data for selected date
+              getData(selectedDateString);
             });
           },
           daysOfWeekStyle: DaysOfWeekStyle(
-            weekdayStyle: TextStyle(color: Colors.white), // Days text color
-            weekendStyle: TextStyle(color: Colors.white), // Weekends text color
+            weekdayStyle: TextStyle(color: Colors.white),
+            weekendStyle: TextStyle(color: Colors.white),
           ),
           calendarStyle: CalendarStyle(
-            defaultTextStyle: TextStyle(color: Colors.white), // Default text color
+            defaultTextStyle: TextStyle(color: Colors.white),
             selectedDecoration: BoxDecoration(
-              color: Colors.white, // Selected date circle color
+              color: Colors.white,
               shape: BoxShape.circle,
             ),
-            selectedTextStyle: TextStyle(color: Colors.orange), // Selected date text color
+            selectedTextStyle: TextStyle(color: Colors.orange),
           ),
         ),
         SizedBox(height: 10),
-        // Existing content
         Expanded(
           child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
         ),
@@ -257,19 +261,17 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // Function to build loading widget
   Widget _buildLoadingWidget() {
     return Center(
-      child: CircularProgressIndicator(), // Display loading indicator
+      child: CircularProgressIndicator(),
     );
   }
 
-  // Function to build location widgets after data fetch
   Widget _buildLocationWidgets() {
     return ListView.separated(
       itemCount: favouritedLocationNames.length,
       separatorBuilder: (BuildContext context, int index) {
-        return Divider(color: Colors.white); // Add white divider between locations
+        return Divider(color: Colors.white);
       },
       itemBuilder: (BuildContext context, int index) {
         var location = favouritedLocationNames[index];
@@ -294,8 +296,8 @@ class _HomeState extends State<Home> {
                       Text(
                         '${allValues[location]?[5]}%',
                         style: TextStyle(
-                          fontSize: 38, // Adjust the font size as needed
-                          fontWeight: FontWeight.bold, // Adjust the font weight as needed
+                          fontSize: 38,
+                          fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),
                       ),
@@ -312,7 +314,18 @@ class _HomeState extends State<Home> {
                 ),
                 Expanded(
                   flex: 1,
-                  child: Icon(Icons.sunny), // Sunset icon
+                  child: Row(
+                    children: [
+                      Icon(Icons.sunny),
+                      SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          _removeLocation(location);
+                        },
+                        child: Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

@@ -43,4 +43,17 @@ class DatabaseService {
     }
     return [];
   }
+
+  Future<void> removeFavouritedLocation(String location) async {
+  return await userCollection.doc(uid).update({
+    'favouritedLocations': FieldValue.arrayRemove([location]),
+  });
+  }
+
+  Future<void> saveFavouritedLocation(String location) async {
+    return await userCollection.doc(uid).set({
+      'favouritedLocations': FieldValue.arrayUnion([location]),
+    }, SetOptions(merge: true));
+  }
+
 }
