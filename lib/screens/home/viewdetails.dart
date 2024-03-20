@@ -26,43 +26,6 @@ class _ViewDetailsState extends State<ViewDetails> {
   
   int currentIndex = 0;
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('View Details'),
-        backgroundColor: currentIndex == 3
-            ? Color.fromARGB(255, 241, 255, 114)
-            : Colors.amber[400],
-        elevation: 0.0,
-      //   actions: <Widget>[
-      //     TextButton.icon(
-      //       icon: const Icon(Icons.person),
-      //       label: const Text('logout'),
-      //       onPressed: () async {
-      //         print("logout button is pressed");
-      //         await _auth.signOut();
-      //       },
-      //     )
-      //   ],
-       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.orange[200]!, Colors.orange[300]!],  
-          ),
-        ),
-        child: Column(
-          children: [
-          //buildbackground(),
-          buildlocation(),
-          ],
-        ),
-      )
-    );
-  }
-
   Map<String, dynamic?> allValues = {};
   List<String> favouritedLocationNames = []; // default names
   bool isLoading = false;
@@ -140,37 +103,50 @@ class _ViewDetailsState extends State<ViewDetails> {
     }
 }
 
-  @override
-  Widget buildbackground() {
-    return Container(
-      decoration: BoxDecoration(
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('View Details'),
+        backgroundColor: currentIndex == 3
+            ? Color.fromARGB(255, 241, 255, 114)
+            : Colors.amber[400],
+        elevation: 0.0,
+      //   actions: <Widget>[
+      //     TextButton.icon(
+      //       icon: const Icon(Icons.person),
+      //       label: const Text('logout'),
+      //       onPressed: () async {
+      //         print("logout button is pressed");
+      //         await _auth.signOut();
+      //       },
+      //     )
+      //   ],
+       ),
+      body: Container(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.orange[200]!, Colors.orange[300]!],
+            colors: [Colors.orange[200]!, Colors.orange[300]!],  
           ),
-      ),
-    );
-  }
-
-  Widget buildlocation(){
-    return Container(
-        height: 700,  
-            child: Align(
-            alignment: AlignmentDirectional(1.0, -1.0),
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFFFFDD00),
-                    Colors.orange,
-                  ],
-                  stops: [0.0, 1.0],
-                  begin: AlignmentDirectional(0.0, -1.0),
-                  end: AlignmentDirectional(0, 1.0),
-                ),
-              ),
+        ),
+    child: Container(
+        // height: 700,  
+        //     child: Align(
+        //     alignment: AlignmentDirectional(1.0, -1.0),
+        //     child: Container(
+        //       width: double.infinity,
+        //       decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //           colors: [
+        //             Color(0xFFFFDD00),
+        //             Colors.orange,
+        //           ],
+        //           stops: [0.0, 1.0],
+        //           begin: AlignmentDirectional(0.0, -1.0),
+        //           end: AlignmentDirectional(0, 1.0),
+        //         ),
+        //       ),
               child: Padding(padding: EdgeInsets.fromLTRB(0,330,0,0),
               child: Align(
                 alignment: AlignmentDirectional(1.0, -1.0),
@@ -229,7 +205,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                           width: 302.0,
                                           height: 129.0,
                                           decoration: BoxDecoration(
-                                            color: Colors.red,
+                                            color: Colors.deepOrange,
                                             borderRadius: BorderRadius.only(
                                               bottomLeft: Radius.circular(30.0),
                                               bottomRight:
@@ -264,17 +240,17 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                   width: 304.0,
                                                   height: 36.0,
                                                   decoration: BoxDecoration(
-                                                    color: Colors.red,
+                                                    color: Colors.deepOrange,
                                                   ),
                                                   child: Align(
                                                     alignment:
                                                         AlignmentDirectional(
-                                                            0.0, -1.0),
+                                                            0.0, -0.5),
                                                     child: Text(
                                                       '7:02 PM',
                                                       style:
                                                           TextStyle(
-                          fontSize: 35, // Adjust the font size as needed
+                          fontSize: 32, // Adjust the font size as needed
                           fontWeight: FontWeight.bold, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
@@ -300,7 +276,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                             height: 100.0,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.red,
+                                                  Colors.orange,
                                               borderRadius: BorderRadius.only(
                                                 bottomLeft:
                                                     Radius.circular(30.0),
@@ -352,7 +328,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                             height: 100.0,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.red,
+                                                  Colors.orange,
                                               borderRadius: BorderRadius.only(
                                                 bottomLeft:
                                                     Radius.circular(30.0),
@@ -404,7 +380,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                             height: 100.0,
                                             decoration: BoxDecoration(
                                               color:
-                                                  Colors.red,
+                                                  Colors.orange,
                                               borderRadius: BorderRadius.only(
                                                 bottomLeft:
                                                     Radius.circular(30.0),
@@ -469,7 +445,9 @@ class _ViewDetailsState extends State<ViewDetails> {
             ),
           ),
         ),
-        );
+    //     ),
+    // ),
+    );
   }
 }
 
