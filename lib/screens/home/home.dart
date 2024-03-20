@@ -324,7 +324,7 @@ class _HomeState extends State<Home> {
                 ),
 
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end, 
+                  crossAxisAlignment: CrossAxisAlignment.end, //j
                   children: [
                     GestureDetector(
                       onTap: () {
