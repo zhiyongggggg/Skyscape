@@ -131,6 +131,43 @@ class _ViewDetailsState extends State<ViewDetails> {
           ),
         ),
     child: Container(
+    //                   width: double.infinity,
+    //                   decoration: BoxDecoration(
+    //                     color: Colors.white,
+    //                   ),
+    // ),
+    //                 Align(
+    //                   alignment: AlignmentDirectional(0.0, 0.0),
+    //                   child: Padding(
+    //                     padding: EdgeInsetsDirectional.fromSTEB(
+    //                         0.0, 125.0, 0.0, 0.0),
+    //                     child: Text(
+    //                       'Serangoon',
+    //                       style:
+    //                           TextStyle(
+    //                       fontSize: 30, // Adjust the font size as needed
+    //                       fontWeight: FontWeight.bold, // Adjust the font weight as needed
+    //                       color: Colors.white,
+    //                               ),
+    //                     ),
+    //                   ),
+    //                 ),
+    //                 Align(
+    //                   alignment: AlignmentDirectional(0.0, 0.0),
+    //                   child: Padding(
+    //                     padding:
+    //                         EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+    //                     child: Text(
+    //                       'Golden Hour Quality',
+    //                       style:
+    //                           TextStyle(
+    //                       fontSize: 30, // Adjust the font size as needed
+    //                       fontWeight: FontWeight.bold, // Adjust the font weight as needed
+    //                       color: Colors.white,
+    //                               ),
+    //                     ),
+    //                   ),
+    //                 ),
         // height: 700,  
         //     child: Align(
         //     alignment: AlignmentDirectional(1.0, -1.0),
