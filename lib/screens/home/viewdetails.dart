@@ -34,6 +34,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     setState(() {
       allValues.clear(); // Clear previous data
       isLoading = true; // Set loading state to true before fetching data
+     
     });
 
     String url, longitude, latitude, sunSet;
@@ -106,7 +107,7 @@ class _ViewDetailsState extends State<ViewDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('View Details'),
+        title: Text('View Details for ${widget.location}'),
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
@@ -130,7 +131,19 @@ class _ViewDetailsState extends State<ViewDetails> {
             colors: [Colors.orange[200]!, Colors.orange[300]!],  
           ),
         ),
-    child: Container(
+
+                child: Column(
+          children: [
+            SizedBox(height: 40),
+            Text(
+              widget.location,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          Expanded(
     //                   width: double.infinity,
     //                   decoration: BoxDecoration(
     //                     color: Colors.white,
@@ -238,6 +251,9 @@ class _ViewDetailsState extends State<ViewDetails> {
                                       child: Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 10.0, 0.0, 0.0),
+
+
+                                        
                                         child: Container(
                                           width: 302.0,
                                           height: 129.0,
@@ -447,6 +463,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                           color: Colors.white,
                                                               ),
                                                     ),
+                                                    
                                                   ),
                                                 ),
                                                 Align(
@@ -481,9 +498,11 @@ class _ViewDetailsState extends State<ViewDetails> {
               ),
             ),
           ),
+          ]
         ),
     //     ),
     // ),
+      )
     );
   }
 }

@@ -1,11 +1,13 @@
 //import 'package:go_router/go_router.dart';
 import 'package:skyscape/screens/settings/account.dart';
 import 'package:skyscape/screens/settings/bugreport.dart';
+import 'package:skyscape/screens/settings/uploadpicture.dart';
 import "package:skyscape/services/auth.dart";
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 
 class ProfileMainWidget extends StatefulWidget {
   const ProfileMainWidget({super.key});
@@ -155,6 +157,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
+
+                  
                   child: Container(
                     width: double.infinity,
                     height: 60,
