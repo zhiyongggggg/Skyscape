@@ -3,22 +3,22 @@ import 'dart:convert';
 import 'dictionaries.dart';
 import 'package:http/http.dart' as http;
 import 'package:skyscape/services/auth.dart';
+import 'package:skyscape/services/database.dart';
 
 class ViewDetails extends StatefulWidget {
   final String location;
-
+  @override
   State<ViewDetails> createState() => _ViewDetailsState();
 
   ViewDetails({required this.location});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Details for $location'),
-      ),
-    );
-  }
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Text('Details for $location'),
+  //     ),
+  //   );
+  // }
 }
 
 class _ViewDetailsState extends State<ViewDetails> {
@@ -27,10 +27,43 @@ class _ViewDetailsState extends State<ViewDetails> {
   int currentIndex = 0;
 
   Map<String, dynamic?> allValues = {};
-  List<String> favouritedLocationNames = []; // default names
+  List<String> favouritedlocationNames = []; // default names
   bool isLoading = false;
+
+  String _formatDateComponent(int component) {
+    return component < 10 ? '0$component' : '$component';
+  }
+    String _getCurrentDateInSingapore() {
+    DateTime now = DateTime.now().toUtc(); // Getting current time in UTC
+    DateTime singaporeTime = now.add(const Duration(
+        hours: 8)); // Adding 8 hours to convert to Singapore time
+    String formattedDate =
+        '${singaporeTime.year}-${_formatDateComponent(singaporeTime.month)}-${_formatDateComponent(singaporeTime.day)}';
+    return formattedDate;
+  }
   
-  void getData(String date) async {
+  Future<void> _getFavouritedLocations() async {
+    List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid)
+        .getFavouritedLocations();
+    setState(() {
+      favouritedlocationNames = locations;
+    });
+    // String currentDate =
+    //     _getCurrentDateInSingapore(); // TODO: Date change according to calendar
+    // getData(currentDate, widget.location);
+  }
+  
+  @override
+  void initState() {
+    super.initState();
+    allValues[widget.location] = [];
+    _getFavouritedLocations();
+    String currentDate =
+        _getCurrentDateInSingapore();
+    getData(currentDate, widget.location);
+  }
+
+  void getData(String date,String location) async {
     setState(() {
       allValues.clear(); // Clear previous data
       isLoading = true; // Set loading state to true before fetching data
@@ -44,7 +77,9 @@ class _ViewDetailsState extends State<ViewDetails> {
         PSI,
         PSIQuality;
 
-    for (var location in favouritedLocationNames) {
+    for (var location in favouritedlocationNames) {
+      allValues[widget.location] = [];
+
       latitude = locationToCoordinatesMapping[location][0].toString();
       longitude = locationToCoordinatesMapping[location][1].toString();
 
@@ -101,10 +136,18 @@ class _ViewDetailsState extends State<ViewDetails> {
       PSIQuality = PSIQuality * 0.3;
       sunsetQuality = cloudCoverQuality + humidityQuality + PSIQuality;
       allValues[location].add(sunsetQuality.toStringAsFixed(2));
+      allValues[location] = allValues[widget.location];
+      allValues[widget.location] = sunsetQuality.toStringAsFixed(2);
     }
+    setState(() {
+    isLoading = false; // Set loading state to false
+  });
 }
 
+@override
   Widget build(BuildContext context) {
+    String currentDate = _getCurrentDateInSingapore();
+    getData(currentDate, widget.location);
     return Scaffold(
       appBar: AppBar(
         title: Text('View Details for ${widget.location}'),
@@ -143,6 +186,21 @@ class _ViewDetailsState extends State<ViewDetails> {
                 color: Colors.white,
               ),
             ),
+            SizedBox(height: 20),
+                    Text(
+                      'Sunset Quality: ${allValues[widget.location]} %',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+            // Text(
+            //           'Golden Hour Quality: ${allValues[widget.location][5]} %',
+            //           style: TextStyle(
+            //             fontSize: 30,
+            //             fontWeight: FontWeight.bold,
+            //             color: Colors.white,
+                       ),
+                     ),
           Expanded(
     //                   width: double.infinity,
     //                   decoration: BoxDecoration(
@@ -197,7 +255,7 @@ class _ViewDetailsState extends State<ViewDetails> {
         //           end: AlignmentDirectional(0, 1.0),
         //         ),
         //       ),
-              child: Padding(padding: EdgeInsets.fromLTRB(0,330,0,0),
+              child: Padding(padding: EdgeInsets.fromLTRB(0,240,0,0),
               child: Align(
                 alignment: AlignmentDirectional(1.0, -1.0),
                 child: Column(
