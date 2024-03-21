@@ -65,6 +65,14 @@ class _UploadPictureState extends State<UploadPicture> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+            Navigator.pop(context);
+        },
+        ),
+      ),
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,7 +1,7 @@
 //import 'package:go_router/go_router.dart';
 import 'package:skyscape/screens/settings/account.dart';
 import 'package:skyscape/screens/settings/bugreport.dart';
-import 'package:skyscape/screens/settings/uploadpicture.dart';
+import 'package:skyscape/screens/Feed/uploadpicture.dart';
 import "package:skyscape/services/auth.dart";
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';

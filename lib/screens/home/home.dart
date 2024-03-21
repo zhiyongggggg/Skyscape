@@ -7,7 +7,7 @@ import 'dart:math';
 
 import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/settings/profile.dart';
-import 'package:skyscape/screens/settings/uploadpicture.dart';
+import 'package:skyscape/screens/Feed/uploadpicture.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
           children: [
             buildHomeScreen(),
             AddFavouriteLocation(),
-            UploadPicture(),
+            FeedPage(),
             ProfileMainWidget(),
           ],
         ),
