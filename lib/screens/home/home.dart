@@ -1,16 +1,19 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:skyscape/screens/Feed/feed.dart';
 import 'dart:convert';
 import 'dart:math';
 
 import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/settings/profile.dart';
+import 'package:skyscape/screens/settings/uploadpicture.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
 import 'package:skyscape/screens/home/viewdetails.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -183,7 +186,7 @@ class _HomeState extends State<Home> {
           children: [
             buildHomeScreen(),
             AddFavouriteLocation(),
-            Center(child: Text('Calendar', style: TextStyle(fontSize: 60))),
+            UploadPicture(),
             ProfileMainWidget(),
           ],
         ),
@@ -202,8 +205,8 @@ class _HomeState extends State<Home> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
-            label: 'Calendar',
+            icon: Icon(Icons.camera_alt),
+            label: 'Feed',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

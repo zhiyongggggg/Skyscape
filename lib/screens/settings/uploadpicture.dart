@@ -10,11 +10,6 @@ class UploadPicture extends StatefulWidget {
 class _UploadPictureState extends State<UploadPicture> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Upload Picture'),
- 
-      ),
-    );
+    return Scaffold();
   }
 }
