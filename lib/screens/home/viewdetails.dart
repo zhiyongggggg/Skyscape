@@ -155,6 +155,16 @@ class _ViewDetailsState extends State<ViewDetails> {
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
         elevation: 0.0,
+      //   actions: <Widget>[
+      //     TextButton.icon(
+      //       icon: const Icon(Icons.person),
+      //       label: const Text('logout'),
+      //       onPressed: () async {
+      //         print("logout button is pressed");
+      //         await _auth.signOut();
+      //       },
+      //     )
+      //   ],
        ),
       body: Container(
         decoration: BoxDecoration(
@@ -183,9 +193,68 @@ class _ViewDetailsState extends State<ViewDetails> {
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
+            // Text(
+            //           'Golden Hour Quality: ${allValues[widget.location][5]} %',
+            //           style: TextStyle(
+            //             fontSize: 30,
+            //             fontWeight: FontWeight.bold,
+            //             color: Colors.white,
                        ),
                      ),
           Expanded(
+    //                   width: double.infinity,
+    //                   decoration: BoxDecoration(
+    //                     color: Colors.white,
+    //                   ),
+    // ),
+    //                 Align(
+    //                   alignment: AlignmentDirectional(0.0, 0.0),
+    //                   child: Padding(
+    //                     padding: EdgeInsetsDirectional.fromSTEB(
+    //                         0.0, 125.0, 0.0, 0.0),
+    //                     child: Text(
+    //                       'Serangoon',
+    //                       style:
+    //                           TextStyle(
+    //                       fontSize: 30, // Adjust the font size as needed
+    //                       fontWeight: FontWeight.bold, // Adjust the font weight as needed
+    //                       color: Colors.white,
+    //                               ),
+    //                     ),
+    //                   ),
+    //                 ),
+    //                 Align(
+    //                   alignment: AlignmentDirectional(0.0, 0.0),
+    //                   child: Padding(
+    //                     padding:
+    //                         EdgeInsetsDirectional.fromSTEB(0.0, 40.0, 0.0, 0.0),
+    //                     child: Text(
+    //                       'Golden Hour Quality',
+    //                       style:
+    //                           TextStyle(
+    //                       fontSize: 30, // Adjust the font size as needed
+    //                       fontWeight: FontWeight.bold, // Adjust the font weight as needed
+    //                       color: Colors.white,
+    //                               ),
+    //                     ),
+    //                   ),
+    //                 ),
+        // height: 700,  
+        //     child: Align(
+        //     alignment: AlignmentDirectional(1.0, -1.0),
+        //     child: Container(
+        //       width: double.infinity,
+        //       decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //           colors: [
+        //             Color(0xFFFFDD00),
+        //             Colors.orange,
+        //           ],
+        //           stops: [0.0, 1.0],
+        //           begin: AlignmentDirectional(0.0, -1.0),
+        //           end: AlignmentDirectional(0, 1.0),
+        //         ),
+        //       ),
               child: Padding(padding: EdgeInsets.fromLTRB(0,240,0,0),
               child: Align(
                 alignment: AlignmentDirectional(1.0, -1.0),
