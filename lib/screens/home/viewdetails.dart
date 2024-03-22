@@ -96,6 +96,25 @@ class _ViewDetailsState extends State<ViewDetails> {
       isLoading = false; // Set loading state to false after fetching data
     });
   }
+  String _calculateTimeDifference(String sunsetTime) {
+    if (sunsetTime == "N/A") return "N/A";
+
+    DateTime now = DateTime.now();
+    DateTime sunset = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      int.parse(sunsetTime.split(':')[0]),
+      int.parse(sunsetTime.split(':')[1]),
+    );
+
+    Duration difference = sunset.difference(now);
+
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes.remainder(60);
+
+    return '${hours}hr ${minutes}min';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,32 +140,50 @@ class _ViewDetailsState extends State<ViewDetails> {
             Text(
               widget.location,
               style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Golden Hour Quality',
+              style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.deepOrangeAccent,
               ),
             ),
             SizedBox(height: 10),
             Text(
-              'Golden Hour Quality',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
               '${allValues[widget.location]?[5] ?? "N/A"}%',
               style: TextStyle(
-                fontSize: 52,
+                fontSize: 85,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Colors.deepOrange,
               ),
             ),
+            SizedBox(height:5),
+            Text(
+              'Sun sets in',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              ),
+            SizedBox(height: 5),
+            Text(
+              _calculateTimeDifference(allValues[widget.location]?[3] ?? "N/A"),
+            style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 130, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                 child: Align(
                   alignment: AlignmentDirectional(1.0, -1.0),
                   child: Column(
@@ -233,21 +270,21 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                 ),
                                                 Align(
                                                   alignment: AlignmentDirectional(
-                                                      0.0, 0.36),
+                                                      0.0, 0.4),
                                                   child: Container(
                                                     width: 304.0,
-                                                    height: 36.0,
+                                                    height: 50.0,
                                                     decoration: BoxDecoration(
                                                       color: Colors.deepOrange,
                                                     ),
                                                     child: Align(
                                                       alignment:
                                                           AlignmentDirectional(
-                                                              0.0, -0.5),
+                                                              0.0, -0.17),
                                                       child: Text(
                                                         '${allValues[widget.location]?[3] ?? "N/A"}',
                                                         style: TextStyle(
-                                                          fontSize: 32,
+                                                          fontSize: 45,
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.white,
@@ -295,7 +332,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       child: Text(
                                                         'Cloud Cover',
                                                         style: TextStyle(
-                                                          fontSize: 15,
+                                                          fontSize: 17,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                           color: Colors.white,
@@ -317,7 +354,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                         child: Text(
                                                           '${allValues[widget.location]?[2] ?? "N/A"}%',
                                                           style: TextStyle(
-                                                            fontSize: 18,
+                                                            fontSize: 25,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color: Colors.black,
@@ -355,7 +392,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       child: Text(
                                                         'Air Quality',
                                                         style: TextStyle(
-                                                          fontSize: 15,
+                                                          fontSize: 17,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                           color: Colors.white,
@@ -377,7 +414,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                         child: Text(
                                                           '${allValues[widget.location]?[4] ?? "N/A"}',
                                                           style: TextStyle(
-                                                            fontSize: 18,
+                                                            fontSize: 25,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                             color: Colors.black,
@@ -416,7 +453,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       'Humidity',
                                                       style:
                                                           TextStyle(
-                          fontSize: 15, // Adjust the font size as needed
+                          fontSize: 17, // Adjust the font size as needed
                           fontWeight: FontWeight.normal, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
@@ -438,7 +475,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                           child: Text(
                                                             '${allValues[widget.location]?[1] ?? "N/A"}%',
                                                             style: TextStyle(
-                                                              fontSize: 18,
+                                                              fontSize: 25,
                                                               fontWeight: FontWeight.bold,
                                                               color: Colors.black,
                                                             ),
