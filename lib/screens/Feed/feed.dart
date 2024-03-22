@@ -1,8 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
-
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -12,28 +10,57 @@ class FeedPage extends StatefulWidget {
 }
 
 class _FeedPageState extends State<FeedPage> {
+  List<String> _imageUrls = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchImages();
+  }
+
+  Future<void> _fetchImages() async {
+    final storageRef = FirebaseStorage.instance.ref().child('photos');
+    final listResult = await storageRef.listAll();
+    final urls = await Future.wait(
+      listResult.items.take(10).map((ref) => ref.getDownloadURL()),
+    );
+    setState(() {
+      _imageUrls = urls;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Feed'),
+        title: const Text('Photos uploaded by other users'),
       ),
-      body: Center(
-        child: Text('gonna implement sth like ig home page,things to implement \n1. View folliwing users \n2. view photos posted by them and by user \n3. button to upload photos for user \n but maybe instead of following users the feeed can jsut be about looking at what other users posted'),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const UploadPicture()),
-              );
-            },
-            child: const Text('Upload Picture'),
+      body: Padding(
+        
+        padding: const EdgeInsets.all(30.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            crossAxisSpacing: 30,
+            mainAxisSpacing: 30,
           ),
+          itemCount: _imageUrls.length,
+          itemBuilder: (context, index) {
+            return Image.network(
+              _imageUrls[index],
+              fit: BoxFit.cover,
+            );
+          },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const UploadPicture()),
+          );
+        },
+        child: const Icon(Icons.camera),
       ),
     );
   }
