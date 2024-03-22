@@ -206,7 +206,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                               alignment: AlignmentDirectional(0.0, 0.0),
                               child: Container(
                                 width: 352.0,
-                                height: 283.0,
+                                height: 300.0,
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.only(
@@ -282,7 +282,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                           AlignmentDirectional(
                                                               0.0, -0.17),
                                                       child: Text(
-                                                        '${allValues[widget.location]?[3] ?? "N/A"}',
+                                                        '${allValues[widget.location]?[3] ?? "N/A"}', //time
                                                         style: TextStyle(
                                                           fontSize: 45,
                                                           fontWeight:
@@ -301,172 +301,72 @@ class _ViewDetailsState extends State<ViewDetails> {
                                       Padding(
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             0.0, 20.0, 0.0, 0.0),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                              width: 100.0,
-                                              height: 100.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.orange,
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(30.0),
-                                                  bottomRight: Radius.circular(30.0),
-                                                  topLeft: Radius.circular(30.0),
-                                                  topRight: Radius.circular(30.0),
+                                        child: Container(
+                                          width: 302.0,
+                                          height: 129.0,
+                                          decoration: BoxDecoration(
+                                            color: Colors.orange,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(30.0),
+                                              bottomRight:
+                                                  Radius.circular(30.0),
+                                              topLeft: Radius.circular(30.0),
+                                              topRight: Radius.circular(30.0),
+                                            ),
+                                          ),
+                                          
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.36),
+                                                child: Container(
+                                                  width: 304.0,
+                                                  height: 36.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.orange,
+                                                  ),
                                                 ),
                                               ),
-                                              child: Stack(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Padding(
+                                              Align(
+                                                alignment: AlignmentDirectional(
+                                                    0.0, 0.0),
+                                                child: Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Padding(
                                                       padding:
                                                           EdgeInsetsDirectional
-                                                              .fromSTEB(0.0, 10.0,
-                                                                  0.0, 0.0),
-                                                      child: Text(
+                                                              .fromSTEB(
+                                                                  10.0,
+                                                                  0.0,
+                                                                  10.0,
+                                                                  0.0),
+                                                      child: Container(
+                                                        width: 80.0,
+                                                        height: 80.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.orange,
+                                                        ),
+                                                    child: Stack(
+                                                      children: [
+                                                         Text(
                                                         'Cloud Cover',
                                                         style: TextStyle(
-                                                          fontSize: 16,
+                                                          fontSize: 14,
                                                           fontWeight:
-                                                              FontWeight.normal,
+                                                              FontWeight.bold,
                                                           color: Colors.white,
                                                         ),
                                                       ),
-                                                    ),
-                                                  ),
-                                                  Align(
+                                                         Align(
                                                     alignment:
                                                         AlignmentDirectional(
                                                             0.05, 0.35),
-                                                    child: Container(
-                                                      width: 80.0,
-                                                      height: 48.0,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.orange,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${allValues[widget.location]?[2] ?? "N/A"}%',
-                                                          style: TextStyle(
-                                                            fontSize: 25,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 100.0,
-                                              height: 100.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.orange,
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(30.0),
-                                                  bottomRight: Radius.circular(30.0),
-                                                  topLeft: Radius.circular(30.0),
-                                                  topRight: Radius.circular(30.0),
-                                                ),
-                                              ),
-                                              child: Stack(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(0.0, 10.0,
-                                                                  0.0, 0.0),
-                                                      child: Text(
-                                                        'Air Quality',
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.normal,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.05, 0.35),
-                                                    child: Container(
-                                                      width: 80.0,
-                                                      height: 48.0,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.orange,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          '${allValues[widget.location]?[4] ?? "N/A"} AQI',
-                                                          style: TextStyle(
-                                                            fontSize: 25,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 100.0,
-                                              height: 100.0,
-                                              decoration: BoxDecoration(
-                                                color: Colors.orange,
-                                                borderRadius: BorderRadius.only(
-                                                  bottomLeft: Radius.circular(30.0),
-                                                  bottomRight: Radius.circular(30.0),
-                                                  topLeft: Radius.circular(30.0),
-                                                  topRight: Radius.circular(30.0),
-                                                ),
-                                              ),
-                                              child: Stack(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        AlignmentDirectional(
-                                                            0.0, -1.0),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsetsDirectional
-                                                              .fromSTEB(0.0, 10.0,
-                                                                0.0, 0.0),
-                                                    child: Text(
-                                                      'Humidity',
-                                                      style:
-                                                          TextStyle(
-                          fontSize: 16, // Adjust the font size as needed
-                          fontWeight: FontWeight.normal, // Adjust the font weight as needed
-                          color: Colors.white,
-                                                              ),
-                                                    ),
-                                                    
-                                                  ),
-                                                ),
-                                                Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          0.05, 0.35),
-                                                  child: Container(
-                                                    width: 80.0,
+                                                         child: Container(
+                                                            width: 80.0,
                                                     height: 48.0,
                                                     decoration: BoxDecoration(
                                                       color: Colors.orange,
@@ -475,20 +375,140 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                           child: Text(
                                                             '${allValues[widget.location]?[1] ?? "N/A"}%',
                                                             style: TextStyle(
-                                                              fontSize: 25,
+                                                              fontSize: 28,
                                                               fontWeight: FontWeight.bold,
                                                               color: Colors.white,
                                                             ),
                                                           ),
                                                         ),
-                                                  ),
+                                                        ),
+                                                         ),
+                                                      ],
+                                                    ),
+                                                          //]
+                                                        //),
+                                                      
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100.0,
+                                                      child: VerticalDivider(
+                                                        thickness: 1.0,
+                                                        color:
+                                                            Colors.white,
+                                                      ),
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          EdgeInsetsDirectional
+                                                              .fromSTEB(
+                                                                  5.0,
+                                                                  0.0,
+                                                                  5.0,
+                                                                  0.0),
+                                                      child: Container(
+                                                        width: 80.0,
+                                                        height: 80.0,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: Colors.orange,
+                                                        ),
+                                                        child: Stack(
+                                                      children: [
+                                                         Text(
+                                                        ' Air Quality',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                         Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.05, 0.35),
+                                                         child: Container(
+                                                            width: 80.0,
+                                                    height: 48.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.orange,
+                                                    ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            '${allValues[widget.location]?[2] ?? "N/A"}AQI',
+                                                            style: TextStyle(
+                                                              fontSize: 28,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ),
+                                                         ),
+                                                      ],
+                                                    ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100.0,
+                                                      child: VerticalDivider(
+                                                        thickness: 1.0,
+                                                        color:
+                                                            Colors.white,
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      width: 80.0,
+                                                      height: 80.0,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Colors.orange,
+                                                      ),
+                                                      child: Stack(
+                                                      children: [
+                                                         Text(
+                                                        ' Humidity',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      Align(
+                                                    alignment:
+                                                        AlignmentDirectional(
+                                                            0.05, 0.35),
+                                                         child: Container(
+                                                            width: 80.0,
+                                                    height: 48.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.orange,
+                                                    ),
+                                                        child: Center(
+                                                          child: Text(
+                                                            '${allValues[widget.location]?[4] ?? "N/A"}%',
+                                                            style: TextStyle(
+                                                              fontSize: 28,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ),
+                                                      ),
+                                                      ],
+                                                    ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    //),
                                   ],
                                 ),
                               ),
@@ -502,13 +522,218 @@ class _ViewDetailsState extends State<ViewDetails> {
               ),
             ),
           ),
-          ]
+          ],
         ),
-    //     ),
-    // ),
-      )
-    );
-  }
-}
+      ),
+        );
+//                                         child: Row(
+//                                           mainAxisSize: MainAxisSize.max,
+//                                           mainAxisAlignment:
+//                                               MainAxisAlignment.spaceAround,
+//                                           children: [
+//                                             Container(
+//                                               width: 100.0,
+//                                               height: 100.0,
+//                                               decoration: BoxDecoration(
+//                                                 color: Colors.orange,
+//                                                 borderRadius: BorderRadius.only(
+//                                                   bottomLeft: Radius.circular(30.0),
+//                                                   bottomRight: Radius.circular(30.0),
+//                                                   topLeft: Radius.circular(30.0),
+//                                                   topRight: Radius.circular(30.0),
+//                                                 ),
+//                                               ),
+//                                               child: Stack(
+//                                                 children: [
+//                                                   Align(
+//                                                     alignment:
+//                                                         AlignmentDirectional(
+//                                                             0.0, -1.0),
+//                                                     child: Padding(
+//                                                       padding:
+//                                                           EdgeInsetsDirectional
+//                                                               .fromSTEB(0.0, 10.0,
+//                                                                   0.0, 0.0),
+//                                                       child: Text(
+//                                                         'Cloud Cover',
+//                                                         style: TextStyle(
+//                                                           fontSize: 16,
+//                                                           fontWeight:
+//                                                               FontWeight.normal,
+//                                                           color: Colors.white,
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                   Align(
+//                                                     alignment:
+//                                                         AlignmentDirectional(
+//                                                             0.05, 0.35),
+//                                                     child: Container(
+//                                                       width: 80.0,
+//                                                       height: 48.0,
+//                                                       decoration: BoxDecoration(
+//                                                         color: Colors.orange,
+//                                                       ),
+//                                                       child: Center(
+//                                                         child: Text(
+//                                                           '${allValues[widget.location]?[2] ?? "N/A"}%',
+//                                                           style: TextStyle(
+//                                                             fontSize: 25,
+//                                                             fontWeight:
+//                                                                 FontWeight.bold,
+//                                                             color: Colors.white,
+//                                                           ),
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                             Container(
+//                                               width: 100.0,
+//                                               height: 100.0,
+//                                               decoration: BoxDecoration(
+//                                                 color: Colors.orange,
+//                                                 borderRadius: BorderRadius.only(
+//                                                   bottomLeft: Radius.circular(30.0),
+//                                                   bottomRight: Radius.circular(30.0),
+//                                                   topLeft: Radius.circular(30.0),
+//                                                   topRight: Radius.circular(30.0),
+//                                                 ),
+//                                               ),
+//                                               child: Stack(
+//                                                 children: [
+//                                                   Align(
+//                                                     alignment:
+//                                                         AlignmentDirectional(
+//                                                             0.0, -1.0),
+//                                                     child: Padding(
+//                                                       padding:
+//                                                           EdgeInsetsDirectional
+//                                                               .fromSTEB(0.0, 10.0,
+//                                                                   0.0, 0.0),
+//                                                       child: Text(
+//                                                         'Air Quality',
+//                                                         style: TextStyle(
+//                                                           fontSize: 16,
+//                                                           fontWeight:
+//                                                               FontWeight.normal,
+//                                                           color: Colors.white,
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                   Align(
+//                                                     alignment:
+//                                                         AlignmentDirectional(
+//                                                             0.05, 0.35),
+//                                                     child: Container(
+//                                                       width: 80.0,
+//                                                       height: 48.0,
+//                                                       decoration: BoxDecoration(
+//                                                         color: Colors.orange,
+//                                                       ),
+//                                                       child: Center(
+//                                                         child: Text(
+//                                                           '${allValues[widget.location]?[4] ?? "N/A"} AQI',
+//                                                           style: TextStyle(
+//                                                             fontSize: 25,
+//                                                             fontWeight:
+//                                                                 FontWeight.bold,
+//                                                             color: Colors.white,
+//                                                           ),
+//                                                         ),
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                             Container(
+//                                               width: 100.0,
+//                                               height: 100.0,
+//                                               decoration: BoxDecoration(
+//                                                 color: Colors.orange,
+//                                                 borderRadius: BorderRadius.only(
+//                                                   bottomLeft: Radius.circular(30.0),
+//                                                   bottomRight: Radius.circular(30.0),
+//                                                   topLeft: Radius.circular(30.0),
+//                                                   topRight: Radius.circular(30.0),
+//                                                 ),
+//                                               ),
+//                                               child: Stack(
+//                                                 children: [
+//                                                   Align(
+//                                                     alignment:
+//                                                         AlignmentDirectional(
+//                                                             0.0, -1.0),
+//                                                     child: Padding(
+//                                                       padding:
+//                                                           EdgeInsetsDirectional
+//                                                               .fromSTEB(0.0, 10.0,
+//                                                                 0.0, 0.0),
+//                                                     child: Text(
+//                                                       'Humidity',
+//                                                       style:
+//                                                           TextStyle(
+//                           fontSize: 16, // Adjust the font size as needed
+//                           fontWeight: FontWeight.normal, // Adjust the font weight as needed
+//                           color: Colors.white,
+//                                                               ),
+//                                                     ),
+                                                    
+//                                                   ),
+//                                                 ),
+//                                                 Align(
+//                                                   alignment:
+//                                                       AlignmentDirectional(
+//                                                           0.05, 0.35),
+//                                                   child: Container(
+//                                                     width: 80.0,
+//                                                     height: 48.0,
+//                                                     decoration: BoxDecoration(
+//                                                       color: Colors.orange,
+//                                                     ),
+//                                                         child: Center(
+//                                                           child: Text(
+//                                                             '${allValues[widget.location]?[1] ?? "N/A"}%',
+//                                                             style: TextStyle(
+//                                                               fontSize: 25,
+//                                                               fontWeight: FontWeight.bold,
+//                                                               color: Colors.white,
+//                                                             ),
+//                                                           ),
+//                                                         ),
+//                                                   ),
+//                                                 ),
+//                                               ],
+//                                             ),
+//                                           ),
+//                                         ],
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//           ),
+//           ]
+//         ),
+//     //     ),
+//     // ),
+//       )
+//     );
+   }
+ }
 
 
