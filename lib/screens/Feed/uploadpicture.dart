@@ -36,13 +36,13 @@ class _UploadPictureState extends State<UploadPicture> {
       final storageRef = FirebaseStorage.instance.ref().child('photos/${DateTime.now().millisecondsSinceEpoch}.jpg');
       final uploadTask = storageRef.putFile(_selectedImage!);
       final snapshot = await uploadTask.whenComplete(() {});
-     // final downloadUrl = await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // this only if url is needed but dk when yet
-     // await FirebaseFirestore.instance.collection('photos').add({
-      //  'imageUrl': downloadUrl,
-       // 'timestamp': FieldValue.serverTimestamp(),
-      //});
+      await FirebaseFirestore.instance.collection('photos').add({
+        'imageUrl': downloadUrl,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
 
       setState(() {
         _selectedImage = null;
