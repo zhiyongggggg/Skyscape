@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dictionaries.dart';
 import 'package:http/http.dart' as http;
 import 'package:skyscape/services/auth.dart';
-//import 'package:skyscape/services/database.dart';
+import 'package:skyscape/services/database.dart';
 
 class ViewDetails extends StatefulWidget {
   final String location;
@@ -27,7 +27,7 @@ class _ViewDetailsState extends State<ViewDetails> {
   int currentIndex = 0;
 
   Map<String, dynamic?> allValues = {};
-  List<String> favouritedLocationNames = []; // default names
+  List<String> favouritedlocationNames = []; // default names
   bool isLoading = false;
 
   String _formatDateComponent(int component) {
@@ -46,7 +46,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid)
         .getFavouritedLocations();
     setState(() {
-      favouritedLocationNames = locations;
+      favouritedlocationNames = locations;
     });
     // String currentDate =
     //     _getCurrentDateInSingapore(); // TODO: Date change according to calendar
@@ -67,7 +67,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     setState(() {
       allValues.clear(); // Clear previous data
       isLoading = true; // Set loading state to true before fetching data
-
+     
     });
 
     String url, longitude, latitude, sunSet;
@@ -77,7 +77,7 @@ class _ViewDetailsState extends State<ViewDetails> {
         PSI,
         PSIQuality;
 
-    for (var location in favouritedLocationNames) {
+    for (var location in favouritedlocationNames) {
       allValues[widget.location] = [];
 
       latitude = locationToCoordinatesMapping[location][0].toString();
