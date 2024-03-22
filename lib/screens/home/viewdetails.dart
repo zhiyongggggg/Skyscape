@@ -348,7 +348,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       width: 80.0,
                                                       height: 48.0,
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white,
+                                                        color: Colors.orange,
                                                       ),
                                                       child: Center(
                                                         child: Text(
@@ -357,7 +357,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                             fontSize: 25,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: Colors.black,
+                                                            color: Colors.white,
                                                           ),
                                                         ),
                                                       ),
@@ -408,7 +408,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       width: 80.0,
                                                       height: 48.0,
                                                       decoration: BoxDecoration(
-                                                        color: Colors.white,
+                                                        color: Colors.orange,
                                                       ),
                                                       child: Center(
                                                         child: Text(
@@ -417,7 +417,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                             fontSize: 25,
                                                             fontWeight:
                                                                 FontWeight.bold,
-                                                            color: Colors.black,
+                                                            color: Colors.white,
                                                           ),
                                                         ),
                                                       ),
@@ -469,7 +469,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                     width: 80.0,
                                                     height: 48.0,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white,
+                                                      color: Colors.orange,
                                                     ),
                                                         child: Center(
                                                           child: Text(
@@ -477,7 +477,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                             style: TextStyle(
                                                               fontSize: 25,
                                                               fontWeight: FontWeight.bold,
-                                                              color: Colors.black,
+                                                              color: Colors.white,
                                                             ),
                                                           ),
                                                         ),
