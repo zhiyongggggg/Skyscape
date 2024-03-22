@@ -332,7 +332,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       child: Text(
                                                         'Cloud Cover',
                                                         style: TextStyle(
-                                                          fontSize: 17,
+                                                          fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                           color: Colors.white,
@@ -392,7 +392,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       child: Text(
                                                         'Air Quality',
                                                         style: TextStyle(
-                                                          fontSize: 17,
+                                                          fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.normal,
                                                           color: Colors.white,
@@ -412,7 +412,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       ),
                                                       child: Center(
                                                         child: Text(
-                                                          '${allValues[widget.location]?[4] ?? "N/A"}',
+                                                          '${allValues[widget.location]?[4] ?? "N/A"} AQI',
                                                           style: TextStyle(
                                                             fontSize: 25,
                                                             fontWeight:
@@ -453,7 +453,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                       'Humidity',
                                                       style:
                                                           TextStyle(
-                          fontSize: 17, // Adjust the font size as needed
+                          fontSize: 16, // Adjust the font size as needed
                           fontWeight: FontWeight.normal, // Adjust the font weight as needed
                           color: Colors.white,
                                                               ),
