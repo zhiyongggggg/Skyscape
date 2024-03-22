@@ -142,7 +142,7 @@ class _ViewDetailsState extends State<ViewDetails> {
               style: TextStyle(
                 fontSize: 40,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 5),
@@ -151,7 +151,7 @@ class _ViewDetailsState extends State<ViewDetails> {
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.deepOrangeAccent,
+                color: Colors.white,
               ),
             ),
             SizedBox(height: 10),
@@ -160,7 +160,7 @@ class _ViewDetailsState extends State<ViewDetails> {
               style: TextStyle(
                 fontSize: 85,
                 fontWeight: FontWeight.bold,
-                color: Colors.deepOrange,
+                color: Colors.white,
               ),
             ),
             SizedBox(height:5),
@@ -169,16 +169,16 @@ class _ViewDetailsState extends State<ViewDetails> {
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white,
               ),
               ),
             SizedBox(height: 5),
             Text(
               _calculateTimeDifference(allValues[widget.location]?[3] ?? "N/A"),
             style: TextStyle(
-                fontSize: 25,
+                fontSize: 30,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white,
               ),
               ),
             Expanded(
