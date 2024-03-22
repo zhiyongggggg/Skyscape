@@ -14,7 +14,6 @@ import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
 import 'package:skyscape/screens/home/viewdetails.dart';
 
-
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -283,77 +282,83 @@ class _HomeState extends State<Home> {
             thickness: 2, // Set the thickness of the divider
           ),
         );
-
       },
       itemBuilder: (BuildContext context, int index) {
         var location = favouritedLocationNames[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ViewDetails(location: location)),
+        return Dismissible(
+          key: Key(location),
+          direction: DismissDirection.endToStart,
+          background: Container(
+            color: Colors.red,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: const Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+          onDismissed: (direction) {
+            _removeLocation(location);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('$location removed'),
+              ),
             );
           },
-          child: Container(
-            margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
-            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween, 
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: 20, left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start, 
-                    children: [
-                      Text(
-                        '${allValues[location]?[5]}%',
-                        style: TextStyle(
-                          fontSize: 52, 
-                          fontWeight: FontWeight.bold, 
-                          color: Colors.white,
-
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ViewDetails(location: location)),
+              );
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 1.0, horizontal: 10.0),
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 20, left: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${allValues[location]?[5]}%',
+                          style: TextStyle(
+                            fontSize: 52,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      Text(
-                        location,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        Text(
+                          location,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ]
+                      ],
+                    ),
                   ),
-                ),
-
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end, //j
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        _removeLocation(location);
-                      },
-                      child: Icon(Icons.delete, color: Colors.black),
+                  Padding(
+                    padding: EdgeInsets.only(top: 7, right: 15),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        _getSunIconPath(double.parse(allValues[location][5])),
+                        width: 140,
+                        height: 80,
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7, right: 15),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(5), 
-                        child: Image.asset(
-                          _getSunIconPath(double.parse(allValues[location][5])),
-                          width: 140,
-                          height: 80,
-                          fit: BoxFit.fill,
-                        ),
-                      )
-                    ),
-                  ],
-                ),
-              ]
+                  ),
+                ],
+              ),
             ),
-          )
+          ),
         );
-
       },
     );
   }
@@ -368,5 +373,4 @@ class _HomeState extends State<Home> {
       return 'assets/bad$randomNumber.jpeg';
     }
   }
-
 }
