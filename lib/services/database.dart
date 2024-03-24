@@ -45,9 +45,9 @@ class DatabaseService {
   }
 
   Future<void> removeFavouritedLocation(String location) async {
-  return await userCollection.doc(uid).update({
-    'favouritedLocations': FieldValue.arrayRemove([location]),
-  });
+    return await userCollection.doc(uid).update({
+      'favouritedLocations': FieldValue.arrayRemove([location]),
+    });
   }
 
   Future<void> saveFavouritedLocation(String location) async {
@@ -56,4 +56,16 @@ class DatabaseService {
     }, SetOptions(merge: true));
   }
 
+  Future<void> savePhotoUrl(String photoUrl) async {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final photoData = {
+      'url': photoUrl,
+      'timestamp': timestamp,
+    };
+
+    return await userCollection.doc(uid).update({
+      'photos': FieldValue.arrayUnion([photoData]),
+    });
+  }
 }
