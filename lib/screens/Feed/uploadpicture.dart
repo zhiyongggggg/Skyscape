@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/services/auth.dart';
 
+
 class UploadPicture extends StatefulWidget {
   const UploadPicture({super.key});
 
@@ -18,6 +19,7 @@ class _UploadPictureState extends State<UploadPicture> {
 
   final AuthService _auth = AuthService();
 
+
   Future<void> _selectImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
@@ -26,42 +28,48 @@ class _UploadPictureState extends State<UploadPicture> {
       });
     }
   }
-Future<void> _uploadImage() async {
-  if (_selectedImage == null) return;
+  Future<void> _uploadImage() async {
 
-  setState(() {
-    _isUploading = true;
-  });
-
-  try {
-    // Upload image to Firebase Storage
-    final storageRef = FirebaseStorage.instance.ref().child('photos/${_auth.currentUser!.uid}.jpg');
-    final metadata = SettableMetadata(
-      customMetadata: {
-        'username': _auth.currentUser!.displayName ?? 'Anonymous',
-      },
-    );
-    final uploadTask = storageRef.putFile(_selectedImage!, metadata);
-    await uploadTask.whenComplete(() {});
+    final userData = await DatabaseService(uid: _auth.currentUser!.uid).getUserData(_auth.currentUser!.uid);
+    final username = userData['username'] ?? 'Anonymous';
+    if (_selectedImage == null) return;
 
     setState(() {
-      _selectedImage = null;
-      _isUploading = false;
+      _isUploading = true;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Image uploaded successfully')),
-    );
-  } catch (e) {
-    setState(() {
-      _isUploading = false;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error uploading image: $e')),
-    );
+    try {
+      // Generate a unique file path for the uploaded photo
+      final fileExtension = _selectedImage!.path.split('.').last;
+      final fileName = '${_auth.currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
+      final storageRef = FirebaseStorage.instance.ref().child('photos/$fileName');
+
+      // Upload image to Firebase Storage with metadata
+      final metadata = SettableMetadata(
+        customMetadata: {
+          'username': username ?? 'Anonymous',
+        },
+      );
+      final uploadTask = storageRef.putFile(_selectedImage!, metadata);
+      await uploadTask.whenComplete(() {});
+
+      setState(() {
+        _selectedImage = null;
+        _isUploading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Image uploaded successfully')),
+      );
+    } catch (e) {
+      setState(() {
+        _isUploading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error uploading image: $e')),
+      );
+    }
   }
-}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

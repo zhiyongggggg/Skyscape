@@ -22,6 +22,7 @@ class AuthService {
   }
 
 
+
   //auth changes user strream
   Stream<Newuser?> get user {
     
@@ -70,7 +71,7 @@ Future registerwithEmailAndPassword(String email, String password, String userna
 
     UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     User? user = result.user;
-
+   // await user!.updateDisplayName(username);
     // Create a new document for the user with the username
     await DatabaseService(uid: user!.uid).updateUserData(username);
 

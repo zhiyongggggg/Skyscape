@@ -80,13 +80,12 @@ Future<void> savePhotoUrl(String photoUrl, String userId) async {
       return photos.cast<Map<String, dynamic>>();
     });
   }
-
   Future<Map<String, dynamic>> getUserData(String uid) async {
-  DocumentSnapshot snapshot = await userCollection.doc(uid).get();
-  if (snapshot.exists) {
-    return snapshot.data() as Map<String, dynamic>;
+    DocumentSnapshot snapshot = await userCollection.doc(uid).get();
+    if (snapshot.exists) {
+      return snapshot.data() as Map<String, dynamic>;
+    }
+    return {'username': 'Anonymous'}; // Return a default value if the user document doesn't exist
   }
-  return {'username': 'Anonymous'}; // Return a default value if the user document doesn't exist
-}
 
 }
