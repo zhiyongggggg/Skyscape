@@ -26,41 +26,41 @@ class _UploadPictureState extends State<UploadPicture> {
       });
     }
   }
+Future<void> _uploadImage() async {
+  if (_selectedImage == null) return;
 
-  Future<void> _uploadImage() async {
-    if (_selectedImage == null) return;
+  setState(() {
+    _isUploading = true;
+  });
+
+  try {
+    // Upload image to Firebase Storage
+    final storageRef = FirebaseStorage.instance.ref().child('photos/${_auth.currentUser!.uid}.jpg');
+    final metadata = SettableMetadata(
+      customMetadata: {
+        'username': _auth.currentUser!.displayName ?? 'Anonymous',
+      },
+    );
+    final uploadTask = storageRef.putFile(_selectedImage!, metadata);
+    await uploadTask.whenComplete(() {});
 
     setState(() {
-      _isUploading = true;
+      _selectedImage = null;
+      _isUploading = false;
     });
 
-    try {
-      // Upload image to Firebase Storage
-      final storageRef = FirebaseStorage.instance.ref().child('user_photos/${_auth.currentUser!.uid}.jpg');
-      final uploadTask = storageRef.putFile(_selectedImage!);
-      final snapshot = await uploadTask.whenComplete(() {});
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-
-      // Save photo URL to user document in Firestore
-      await DatabaseService(uid: _auth.currentUser!.uid).savePhotoUrl(downloadUrl);
-
-      setState(() {
-        _selectedImage = null;
-        _isUploading = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image uploaded successfully')),
-      );
-    } catch (e) {
-      setState(() {
-        _isUploading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error uploading image: $e')),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Image uploaded successfully')),
+    );
+  } catch (e) {
+    setState(() {
+      _isUploading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error uploading image: $e')),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
