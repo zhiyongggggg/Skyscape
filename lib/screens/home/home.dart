@@ -167,6 +167,7 @@ class _HomeState extends State<Home> {
                       ? 'Explore'
                       : 'Settings',
   ),
+        centerTitle: true,
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
