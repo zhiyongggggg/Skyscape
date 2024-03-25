@@ -10,6 +10,8 @@ class DatabaseService {
   Future<void> updateUserData(String username) async {
     return await userCollection.doc(uid).set({
       'username': username,
+      'favouritedLocations': [],
+      'followingList': [],
     });
   }
 
@@ -40,6 +42,54 @@ class DatabaseService {
     if (snapshot.exists) {
       List<dynamic> locations = snapshot.get('favouritedLocations');
       return locations.map((location) => location.toString()).toList();
+    }
+    return [];
+  }
+
+  Future<String> findUsername(String username) async {
+    try {
+      var snapshot = await userCollection.where('username', isEqualTo: username).get();
+      
+      // Check if any documents were found with the provided username
+      if (snapshot.docs.isNotEmpty) {
+        return snapshot.docs.first['username'];
+      } else {
+        return "No user found.";
+      }
+    } catch (e) {
+      print('getUsers: Error retrieving user data: $e');
+      return "Error retrieving user data.";
+    }
+  }
+
+  Future<void> followUser(String username) async {
+    DocumentReference documentReference = userCollection.doc(uid);
+    DocumentSnapshot snapshot = await documentReference.get();
+    
+    if (snapshot.exists) {
+      // Document exists, update it
+      return await documentReference.update({
+        'followingList': FieldValue.arrayUnion([username]),
+      });
+    } else {
+      // Document doesn't exist, create it
+      return await documentReference.set({
+        'followingList': [username],
+      });
+    }
+  }
+
+  Future<void> unfollowUser(String username) async {
+    return await userCollection.doc(uid).update({
+      'followingList': FieldValue.arrayRemove([username]),
+    });
+  }
+
+  Future<List<String>> getFollowingList() async {
+    DocumentSnapshot snapshot = await userCollection.doc(uid).get();
+    if (snapshot.exists) {
+      List<dynamic> following = snapshot.get('followingList');
+      return following.map((user) => user.toString()).toList();
     }
     return [];
   }
