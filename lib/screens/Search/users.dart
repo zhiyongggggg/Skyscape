@@ -3,7 +3,6 @@ import 'package:skyscape/screens/home/home.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/services/auth.dart';
 
-
 class SearchUsers extends StatefulWidget {
   const SearchUsers({super.key});
 
@@ -12,19 +11,25 @@ class SearchUsers extends StatefulWidget {
 }
 
 class _SearchUsersState extends State<SearchUsers> {
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
   String searchQuery = '';
   final AuthService _auth = AuthService();
-  String foundUser = ""; 
+  String foundUser = "";
   String followingStatus = "";
   bool isLoading = false; // Flag for loading state
-  bool isFirstBoot = true; // Flag for initial state
+  bool showFollowingList = true; // Flag for initial state
+  List<String> followingList = [];
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Container(
-         decoration: BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -42,7 +47,13 @@ class _SearchUsersState extends State<SearchUsers> {
                   });
                 },
                 onSubmitted: (value) {
-                  getData(value);
+                  if (value == "") {
+                    showFollowingList = true;
+                    getData();
+                  } else {
+                    showFollowingList = false;
+                    searchUsername(value);
+                  }
                 },
                 decoration: InputDecoration(
                   hintText: 'Search for an user...',
@@ -57,19 +68,40 @@ class _SearchUsersState extends State<SearchUsers> {
               ),
             ),
             Expanded(
-              child: isLoading ? _buildLoadingWidget() : (isFirstBoot ? Container() : _buildUserWidgets()),
+              child: isLoading
+                  ? _buildLoadingWidget()
+                  : (showFollowingList
+                      ? _buildFollowingListWidget(followingList)
+                      : _buildUserWidgets()),
             ),
           ],
         ),
       ),
-    
-          
     );
   }
 
   Widget _buildLoadingWidget() {
     return Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _buildFollowingListWidget(List<String> followingList) {
+    return ListView.builder(
+      itemCount: followingList.length,
+      itemBuilder: (context, index) {
+        final username = followingList[index];
+        return ListTile(
+          title: Text(username),
+          trailing: ElevatedButton(
+            onPressed: () {
+              // Handle unfollow action
+              unfollow(username);
+            },
+            child: Text("Unfollow"),
+          ),
+        );
+      },
     );
   }
 
@@ -93,7 +125,8 @@ class _SearchUsersState extends State<SearchUsers> {
                     follow(foundUser);
                   }
                 },
-                child: Text(followingStatus == "not_following" ? "Follow" : "Unfollow"),
+                child: Text(
+                    followingStatus == "not_following" ? "Follow" : "Unfollow"),
               ),
             ),
           ],
@@ -108,6 +141,8 @@ class _SearchUsersState extends State<SearchUsers> {
     });
 
     await DatabaseService(uid: _auth.currentUser!.uid).unfollowUser(username);
+    followingList =
+        await DatabaseService(uid: _auth.currentUser!.uid).getFollowingList();
     followingStatus = "not_following";
     setState(() {
       isLoading = false; // Set loading state to false after fetching data
@@ -126,17 +161,31 @@ class _SearchUsersState extends State<SearchUsers> {
     });
   }
 
-
-  void getData(String username) async {
+  void getData() async {
+    followingList.clear();
     setState(() {
       isLoading = true; // Set loading state to true before fetching data
-      isFirstBoot = false; 
     });
 
-    String user = await DatabaseService(uid: _auth.currentUser!.uid).findUsername(username);
+    followingList =
+        await DatabaseService(uid: _auth.currentUser!.uid).getFollowingList();
+
+    setState(() {
+      isLoading = false; // Set loading state to false after fetching data
+    });
+  }
+
+  void searchUsername(String username) async {
+    setState(() {
+      isLoading = true; // Set loading state to true before fetching data
+    });
+
+    String user = await DatabaseService(uid: _auth.currentUser!.uid)
+        .findUsername(username);
     foundUser = user;
 
-    List<String> followingList = await DatabaseService(uid: _auth.currentUser!.uid).getFollowingList();
+    List<String> followingList =
+        await DatabaseService(uid: _auth.currentUser!.uid).getFollowingList();
 
     setState(() {
       isLoading = false; // Set loading state to false after fetching data
@@ -148,4 +197,3 @@ class _SearchUsersState extends State<SearchUsers> {
     });
   }
 }
-
