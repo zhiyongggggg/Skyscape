@@ -26,11 +26,13 @@ class _AddFavouriteLocationState extends State<AddFavouriteLocation> {
         .toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search for Estates'),
-        centerTitle: true,
-        backgroundColor: Colors.orange[300],
+        appBar: AppBar(
+        title: Text('Search for estates'),
+        backgroundColor: Colors.amber[400],
+         
+        elevation: 0.0,
       ),
+
       body: Container(
          decoration: BoxDecoration(
           gradient: LinearGradient(

@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:skyscape/screens/Search/search.dart';
+import 'package:skyscape/screens/Search/users.dart';
 import 'package:skyscape/screens/settings/profile.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -13,6 +14,7 @@ import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'dictionaries.dart';
 import 'package:skyscape/screens/home/viewdetails.dart';
+
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -156,21 +158,32 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Skyscape'),
+        title: Text(
+          currentIndex == 0
+              ? 'Saved Locations'
+              : currentIndex == 1
+                  ? 'Search for Users'
+                  : currentIndex == 2
+                      ? 'Explore'
+                      : 'Settings',
+  ),
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
         elevation: 0.0,
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person),
-            label: const Text('logout'),
-            onPressed: () async {
-              print("logout button is pressed");
-              await _auth.signOut();
-            },
-          )
-        ],
+          actions: <Widget>[
+            if (currentIndex == 0)
+              TextButton.icon(
+                icon: const Icon(Icons.add),
+                label: const Text('Add'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
+                  );
+                },
+              ),
+          ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -184,7 +197,7 @@ class _HomeState extends State<Home> {
           index: currentIndex,
           children: [
             buildHomeScreen(),
-            AddFavouriteLocation(),
+            SearchUsers(),
             FeedPage(),
             ProfileMainWidget(),
           ],
