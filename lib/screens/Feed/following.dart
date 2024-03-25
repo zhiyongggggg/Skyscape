@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:skyscape/screens/loading/loading.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 
 class FollowingPage extends StatefulWidget {
   const FollowingPage({Key? key}) : super(key: key);
@@ -15,6 +17,7 @@ class _FollowingPageState extends State<FollowingPage> {
   List<String> followingList = [];
   List<Map<String, dynamic>> _photos = [];
   final _databaseService = DatabaseService();
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -29,7 +32,10 @@ class _FollowingPageState extends State<FollowingPage> {
     setState(() {
       followingList = following;
     });
-    _fetchPhotos();
+    await _fetchPhotos();
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Future<void> _fetchPhotos() async {
@@ -61,55 +67,57 @@ class _FollowingPageState extends State<FollowingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _photos.isNotEmpty
-          ? GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 0.8,
-              ),
-              itemCount: _photos.length,
-              itemBuilder: (context, index) {
-                final photo = _photos[index];
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Posted by ${photo['username']}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.normal,
-                        color: Colors.grey[800],
-                        fontSize: 16,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: Container(
-                        height: 200,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                          image: DecorationImage(
-                            image: NetworkImage(photo['url']),
-                            fit: BoxFit.cover,
+      body: _isLoading
+          ? Loading()
+          : _photos.isNotEmpty
+              ? GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.8,
+                  ),
+                  itemCount: _photos.length,
+                  itemBuilder: (context, index) {
+                    final photo = _photos[index];
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Posted by ${photo['username']}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[800],
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            )
-          : const Center(
-              child: Text('No photos posted by followed users.'),
-            ),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                              image: DecorationImage(
+                                image: NetworkImage(photo['url']),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                )
+              : const Center(
+                  child: Text('No photos posted by followed users.'),
+                ),
     );
   }
 }
