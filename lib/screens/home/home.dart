@@ -174,15 +174,19 @@ class _HomeState extends State<Home> {
         elevation: 0.0,
           actions: <Widget>[
             if (currentIndex == 0)
-              TextButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('Add'),
+              FloatingActionButton.small(
+                child: const Icon(Icons.add, size: 20),
+                shape: CircleBorder(),
+                backgroundColor: Color.fromARGB(220, 252, 249, 242),
+                elevation: 1,
+                
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
                   );
                 },
+                
               ),
           ],
       ),
