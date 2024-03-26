@@ -18,15 +18,17 @@ class _ViewDetailsState extends State<ViewDetails> {
 
   int currentIndex = 0;
 
+  bool isLoading = true;
+
   Map<String, dynamic?> allValues = {};
   List<String> favouritedLocationNames = []; // default names
-  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     getData(DateTime.now().toString().substring(0, 10));
   }
+
 
   void getData(String date) async {
     setState(() {
@@ -108,6 +110,11 @@ class _ViewDetailsState extends State<ViewDetails> {
       int.parse(sunsetTime.split(':')[1]),
     );
 
+    if (sunset.isBefore(now)) {
+    // Add 1 day to sunset time
+    sunset = sunset.add(Duration(days: 1));
+  }
+
     Duration difference = sunset.difference(now);
 
     int hours = difference.inHours;
@@ -116,11 +123,25 @@ class _ViewDetailsState extends State<ViewDetails> {
     return '${hours}hr ${minutes}min';
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildLoadingWidget() {
+  return Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [Colors.orange[200]!, Colors.orange[300]!], // Replace with your desired colors
+      ),
+    ),
+    child: Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
+}
+
+  Widget buildMainContent() {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Details for ${widget.location}'),
+        title: Text('View Details'),
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
             : Colors.amber[400],
@@ -498,6 +519,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                         ),
                                                         ),
                                                       ),
+                                                      SizedBox(height: 10),
                                                       ],
                                                     ),
                                                     ),
@@ -526,214 +548,11 @@ class _ViewDetailsState extends State<ViewDetails> {
         ),
       ),
         );
-//                                         child: Row(
-//                                           mainAxisSize: MainAxisSize.max,
-//                                           mainAxisAlignment:
-//                                               MainAxisAlignment.spaceAround,
-//                                           children: [
-//                                             Container(
-//                                               width: 100.0,
-//                                               height: 100.0,
-//                                               decoration: BoxDecoration(
-//                                                 color: Colors.orange,
-//                                                 borderRadius: BorderRadius.only(
-//                                                   bottomLeft: Radius.circular(30.0),
-//                                                   bottomRight: Radius.circular(30.0),
-//                                                   topLeft: Radius.circular(30.0),
-//                                                   topRight: Radius.circular(30.0),
-//                                                 ),
-//                                               ),
-//                                               child: Stack(
-//                                                 children: [
-//                                                   Align(
-//                                                     alignment:
-//                                                         AlignmentDirectional(
-//                                                             0.0, -1.0),
-//                                                     child: Padding(
-//                                                       padding:
-//                                                           EdgeInsetsDirectional
-//                                                               .fromSTEB(0.0, 10.0,
-//                                                                   0.0, 0.0),
-//                                                       child: Text(
-//                                                         'Cloud Cover',
-//                                                         style: TextStyle(
-//                                                           fontSize: 16,
-//                                                           fontWeight:
-//                                                               FontWeight.normal,
-//                                                           color: Colors.white,
-//                                                         ),
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                   Align(
-//                                                     alignment:
-//                                                         AlignmentDirectional(
-//                                                             0.05, 0.35),
-//                                                     child: Container(
-//                                                       width: 80.0,
-//                                                       height: 48.0,
-//                                                       decoration: BoxDecoration(
-//                                                         color: Colors.orange,
-//                                                       ),
-//                                                       child: Center(
-//                                                         child: Text(
-//                                                           '${allValues[widget.location]?[2] ?? "N/A"}%',
-//                                                           style: TextStyle(
-//                                                             fontSize: 25,
-//                                                             fontWeight:
-//                                                                 FontWeight.bold,
-//                                                             color: Colors.white,
-//                                                           ),
-//                                                         ),
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                             Container(
-//                                               width: 100.0,
-//                                               height: 100.0,
-//                                               decoration: BoxDecoration(
-//                                                 color: Colors.orange,
-//                                                 borderRadius: BorderRadius.only(
-//                                                   bottomLeft: Radius.circular(30.0),
-//                                                   bottomRight: Radius.circular(30.0),
-//                                                   topLeft: Radius.circular(30.0),
-//                                                   topRight: Radius.circular(30.0),
-//                                                 ),
-//                                               ),
-//                                               child: Stack(
-//                                                 children: [
-//                                                   Align(
-//                                                     alignment:
-//                                                         AlignmentDirectional(
-//                                                             0.0, -1.0),
-//                                                     child: Padding(
-//                                                       padding:
-//                                                           EdgeInsetsDirectional
-//                                                               .fromSTEB(0.0, 10.0,
-//                                                                   0.0, 0.0),
-//                                                       child: Text(
-//                                                         'Air Quality',
-//                                                         style: TextStyle(
-//                                                           fontSize: 16,
-//                                                           fontWeight:
-//                                                               FontWeight.normal,
-//                                                           color: Colors.white,
-//                                                         ),
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                   Align(
-//                                                     alignment:
-//                                                         AlignmentDirectional(
-//                                                             0.05, 0.35),
-//                                                     child: Container(
-//                                                       width: 80.0,
-//                                                       height: 48.0,
-//                                                       decoration: BoxDecoration(
-//                                                         color: Colors.orange,
-//                                                       ),
-//                                                       child: Center(
-//                                                         child: Text(
-//                                                           '${allValues[widget.location]?[4] ?? "N/A"} AQI',
-//                                                           style: TextStyle(
-//                                                             fontSize: 25,
-//                                                             fontWeight:
-//                                                                 FontWeight.bold,
-//                                                             color: Colors.white,
-//                                                           ),
-//                                                         ),
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                 ],
-//                                               ),
-//                                             ),
-//                                             Container(
-//                                               width: 100.0,
-//                                               height: 100.0,
-//                                               decoration: BoxDecoration(
-//                                                 color: Colors.orange,
-//                                                 borderRadius: BorderRadius.only(
-//                                                   bottomLeft: Radius.circular(30.0),
-//                                                   bottomRight: Radius.circular(30.0),
-//                                                   topLeft: Radius.circular(30.0),
-//                                                   topRight: Radius.circular(30.0),
-//                                                 ),
-//                                               ),
-//                                               child: Stack(
-//                                                 children: [
-//                                                   Align(
-//                                                     alignment:
-//                                                         AlignmentDirectional(
-//                                                             0.0, -1.0),
-//                                                     child: Padding(
-//                                                       padding:
-//                                                           EdgeInsetsDirectional
-//                                                               .fromSTEB(0.0, 10.0,
-//                                                                 0.0, 0.0),
-//                                                     child: Text(
-//                                                       'Humidity',
-//                                                       style:
-//                                                           TextStyle(
-//                           fontSize: 16, // Adjust the font size as needed
-//                           fontWeight: FontWeight.normal, // Adjust the font weight as needed
-//                           color: Colors.white,
-//                                                               ),
-//                                                     ),
-                                                    
-//                                                   ),
-//                                                 ),
-//                                                 Align(
-//                                                   alignment:
-//                                                       AlignmentDirectional(
-//                                                           0.05, 0.35),
-//                                                   child: Container(
-//                                                     width: 80.0,
-//                                                     height: 48.0,
-//                                                     decoration: BoxDecoration(
-//                                                       color: Colors.orange,
-//                                                     ),
-//                                                         child: Center(
-//                                                           child: Text(
-//                                                             '${allValues[widget.location]?[1] ?? "N/A"}%',
-//                                                             style: TextStyle(
-//                                                               fontSize: 25,
-//                                                               fontWeight: FontWeight.bold,
-//                                                               color: Colors.white,
-//                                                             ),
-//                                                           ),
-//                                                         ),
-//                                                   ),
-//                                                 ),
-//                                               ],
-//                                             ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//           ]
-//         ),
-//     //     ),
-//     // ),
-//       )
-//     );
-   }
- }
+  }
 
+@override
+Widget build(BuildContext context) {
+  return isLoading ? _buildLoadingWidget() : buildMainContent();
+}
 
+}
