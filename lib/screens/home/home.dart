@@ -165,12 +165,10 @@ class _HomeState extends State<Home> {
                   ? 'Search for Users'
                   : currentIndex == 2
                       ? 'Explore'
-                      : 'Settings',
+                      : 'Profile',
   ),
         centerTitle: true,
-        backgroundColor: currentIndex == 3
-            ? Color.fromARGB(255, 241, 255, 114)
-            : Colors.amber[400],
+        backgroundColor: Colors.amber[400],
         elevation: 0.0,
           actions: <Widget>[
             if (currentIndex == 0)
@@ -227,7 +225,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: 'Settings',
+            label: 'Profile',
           ),
         ],
       ),

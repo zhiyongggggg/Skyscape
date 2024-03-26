@@ -1,4 +1,4 @@
-//import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skyscape/screens/settings/account.dart';
 import 'package:skyscape/screens/settings/bugreport.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
@@ -7,23 +7,49 @@ import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:skyscape/screens/Search/users.dart';
 
 
 class ProfileMainWidget extends StatefulWidget {
   const ProfileMainWidget({super.key});
-
+  
   @override
   State<ProfileMainWidget> createState() => _ProfileMainWidgetState();
 }
 
-class _ProfileMainWidgetState extends State<ProfileMainWidget> {
-  final AuthService _auth = AuthService();
+// Future<String> getUsername() async {
+//   final FirebaseAuth auth = FirebaseAuth.instance;
+//   String? uid = auth.currentUser!.uid;
 
+//   final CollectionReference usersCollection = FirebaseFirestore.instance.collection('users');
+//   final DocumentSnapshot documentSnapshot = await usersCollection.doc(uid).get();
+//   if (documentSnapshot.exists) {
+//     dynamic data = documentSnapshot.data();
+//     String? username = data?.get('username');
+//     if(username != null) {
+//       return username;
+//     } else {
+//       return 'Guest';
+//     }
+//   } else {
+//     return "username not found"; // Handle document not found scenario (optional)
+//   } 
+// } 
+
+class _ProfileMainWidgetState extends State<ProfileMainWidget> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  
+  
   @override
   Widget build(BuildContext context) {
+    
+    
+
     return Scaffold(
       //key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).secondary,
+      backgroundColor: FlutterFlowTheme.of(context).tertiary,
       body: SafeArea(
         top: true,
         child: Align(
@@ -36,28 +62,32 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
             ),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF048B71), Color(0xFF39BAA4)],
-                stops: [0, 1],
-                begin: AlignmentDirectional(0, -1),
-                end: AlignmentDirectional(0, 1),
-              ),
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        const Color.fromARGB(255, 255, 225, 181)!,
+                        Colors.orange[100]!,
+                        Color.fromARGB(255, 243, 213, 245)!,
+                        Color.fromARGB(255, 250, 217, 182)!,
+                      ],
+                      stops: [0.1, 0.3, 0.5, 0.8],
+                    ),  
             ),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Align(
-                  alignment: AlignmentDirectional(0, 0),
+                  alignment: AlignmentDirectional(-1, 0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 50, 0, 30),
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 50, 0, 30),
                     child: Text(
-                      'Profile',
+                      'Welcome',
                       textAlign: TextAlign.start,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Readex Pro',
-                            color:
-                                FlutterFlowTheme.of(context).primaryBackground,
-                            fontSize: 40,
+                            color: FlutterFlowTheme.of(context).primaryText,
+                            fontSize: 30,
                           ),
                     ),
                   ),
@@ -115,7 +145,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                                 fontFamily: 'Readex Pro',
                                                 color:
                                                     FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
+                                                        .primaryText,
                                                 fontSize: 16,
                                               ),
                                         ),
@@ -136,7 +166,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                         .override(
                                           fontFamily: 'Readex Pro',
                                           color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
+                                              .primaryText,
                                           fontSize: 12,
                                         ),
                                   ),
@@ -153,175 +183,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 Divider(
                   thickness: 1,
                   indent: 90,
-                  color: FlutterFlowTheme.of(context).accent4,
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-
-                  
-                  child: Container(
-                    width: double.infinity,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.rectangle,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 60,
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0, -1),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            20, 0, 0, 0),
-                                        child: Text(
-                                          'Upload Picture',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(0, 0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20, 0, 0, 0),
-                                  child: Text(
-                                    'Show off the beautiful sunset captured',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  thickness: 1,
-                  indent: 90,
-                  color: FlutterFlowTheme.of(context).accent4,
-                ),
-                Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
-                  child: Container(
-                    width: double.infinity,
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      shape: BoxShape.rectangle,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                          child: Icon(
-                            Icons.people,
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            size: 60,
-                          ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional(0, 0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: AlignmentDirectional(0, -1),
-                                      child: Padding(
-                                        padding: EdgeInsetsDirectional.fromSTEB(
-                                            20, 0, 0, 0),
-                                        child: Text(
-                                          'Find Other Users',
-                                          style: FlutterFlowTheme.of(context)
-                                              .bodyLarge
-                                              .override(
-                                                fontFamily: 'Readex Pro',
-                                                color:
-                                                    FlutterFlowTheme.of(context)
-                                                        .primaryBackground,
-                                                fontSize: 16,
-                                              ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Align(
-                                alignment: AlignmentDirectional(0, 0),
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      20, 0, 0, 0),
-                                  child: Text(
-                                    'Share your moment with your loved ones',
-                                    style: FlutterFlowTheme.of(context)
-                                        .bodyMedium
-                                        .override(
-                                          fontFamily: 'Readex Pro',
-                                          color: FlutterFlowTheme.of(context)
-                                              .primaryBackground,
-                                        ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Divider(
-                  thickness: 1,
-                  indent: 90,
-                  color: FlutterFlowTheme.of(context).accent4,
+                  color: FlutterFlowTheme.of(context).primaryText,
                 ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
@@ -379,7 +241,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                                   fontFamily: 'Readex Pro',
                                                   color: FlutterFlowTheme.of(
                                                           context)
-                                                      .primaryBackground,
+                                                      .primaryText,
                                                   fontSize: 16,
                                                 ),
                                           ),
@@ -400,7 +262,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                           .override(
                                             fontFamily: 'Readex Pro',
                                             color: FlutterFlowTheme.of(context)
-                                                .primaryBackground,
+                                                .primaryText,
                                           ),
                                     ),
                                   ),
@@ -416,7 +278,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 Divider(
                   thickness: 1,
                   indent: 90,
-                  color: FlutterFlowTheme.of(context).accent4,
+                  color: FlutterFlowTheme.of(context).primaryText,
                 ),
                 Align(
                   alignment: AlignmentDirectional(0, -1),
