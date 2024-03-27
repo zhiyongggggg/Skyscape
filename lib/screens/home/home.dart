@@ -216,8 +216,8 @@ class _HomeState extends State<Home> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+            icon: Icon(Icons.people_alt_rounded),
+            label: 'Users',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
