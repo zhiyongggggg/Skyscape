@@ -12,6 +12,7 @@ class DatabaseService {
       'username': username,
       'favouritedLocations': [],
       'followingList': [],
+      'profilePicture': "",
     });
   }
 
