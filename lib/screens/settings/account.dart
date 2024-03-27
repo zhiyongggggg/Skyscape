@@ -55,7 +55,7 @@ class _AccountState extends State<Account> {
                       radius: 50,
                       backgroundImage: profilePicture.isNotEmpty
                           ? NetworkImage(profilePicture)
-                          : AssetImage('assets/default_profile.png') as ImageProvider,
+                          : AssetImage('assets/default_profile.jpg') as ImageProvider,
                     ),
                   ),
                   SizedBox(height: 16),
