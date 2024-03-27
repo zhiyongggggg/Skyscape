@@ -100,7 +100,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileEditWidget()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  Account()));
                     },
                   child: Container(
                     width: double.infinity,
