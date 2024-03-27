@@ -20,6 +20,7 @@ class _SearchUsersState extends State<SearchUsers> {
   String searchQuery = '';
   final AuthService _auth = AuthService();
   String foundUser = "";
+  String targetUserID = "";
   String followingStatus = "";
   bool isLoading = false; // Flag for loading state
   bool showFollowingList = true; // Flag for initial state

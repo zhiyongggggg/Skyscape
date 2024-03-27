@@ -47,6 +47,24 @@ class DatabaseService {
     return [];
   }
 
+  Future<String> findUsernameFromUID(String userid) async {
+    DocumentSnapshot snapshot = await userCollection.doc(userid).get();
+    if (snapshot.exists) {
+      String username = snapshot.get('username');
+      return username;
+    }
+    return "No user found.";
+  }
+
+  Future<String> findUIDFromUsername(String username) async {
+    QuerySnapshot snapshot = await userCollection.where('username', isEqualTo: username).get();
+    if (snapshot.docs.isNotEmpty) {
+      String userid = snapshot.docs.first.id;
+      return userid;
+    }
+    return "No user found"; 
+  }
+
   Future<String> findUsername(String username) async {
     try {
       var snapshot = await userCollection.where('username', isEqualTo: username).get();
@@ -67,22 +85,27 @@ class DatabaseService {
     DocumentReference documentReference = userCollection.doc(uid);
     DocumentSnapshot snapshot = await documentReference.get();
     
+    String targetUserID = await findUIDFromUsername(username);
+
     if (snapshot.exists) {
       // Document exists, update it
       return await documentReference.update({
-        'followingList': FieldValue.arrayUnion([username]),
+        'followingList': FieldValue.arrayUnion([targetUserID]),
       });
     } else {
       // Document doesn't exist, create it
       return await documentReference.set({
-        'followingList': [username],
+        'followingList': [targetUserID],
       });
     }
   }
 
   Future<void> unfollowUser(String username) async {
+
+    String targetUserID = await findUIDFromUsername(username);
+
     return await userCollection.doc(uid).update({
-      'followingList': FieldValue.arrayRemove([username]),
+      'followingList': FieldValue.arrayRemove([targetUserID]),
     });
   }
 
@@ -90,7 +113,16 @@ class DatabaseService {
     DocumentSnapshot snapshot = await userCollection.doc(uid).get();
     if (snapshot.exists) {
       List<dynamic> following = snapshot.get('followingList');
-      return following.map((user) => user.toString()).toList();
+      List<String> followingUsernames = [];
+      
+      // Iterate over each targetUserID and get the corresponding username
+      for (var targetUserID in following) {
+        String username = await findUsernameFromUID(targetUserID.toString());
+        if (username != null) {
+          followingUsernames.add(username);
+        }
+      }
+      return followingUsernames;
     }
     return [];
   }
