@@ -3,6 +3,7 @@ import 'package:skyscape/screens/Search/followedusers.dart';
 import 'package:skyscape/screens/home/home.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SearchUsers extends StatefulWidget {
   const SearchUsers({super.key});
@@ -93,41 +94,53 @@ class _SearchUsersState extends State<SearchUsers> {
       itemCount: followingList.length,
       itemBuilder: (context, index) {
         final username = followingList[index];
-        return FutureBuilder<Map<String, dynamic>>(
-          future: DatabaseService(uid: _auth.currentUser!.uid).getUserData(username),
+        return StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('users')
+              .where('username', isEqualTo: username)
+              .limit(1)
+              .snapshots()
+              .map((snapshot) => snapshot.docs.first),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.hasData) {
+              final userData = snapshot.data!.data() as Map<String, dynamic>?;
+              final profilePicture = userData?['profilePicture'] ?? '';
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: profilePicture.isNotEmpty
+                      ? NetworkImage(profilePicture)
+                      : AssetImage('assets/default_profile.jpg') as ImageProvider,
+                ),
+                title: Text(username),
+                onTap: () {
+                  // Navigate to FollowedUser page when a username is tapped
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FollowedUser(username: username),
+                    ),
+                  );
+                },
+                trailing: ElevatedButton(
+                  onPressed: () {
+                    // Handle unfollow action
+                    unfollow(username);
+                  },
+                  child: Text("Unfollow"),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return ListTile(
+                leading: CircleAvatar(),
+                title: Text(username),
+                subtitle: Text('Error loading profile picture'),
+              );
+            } else {
               return ListTile(
                 leading: CircleAvatar(),
                 title: Text(username),
               );
             }
-            final userData = snapshot.data ?? {};
-            final profilePicture = userData['profilePicture'] ?? '';
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: profilePicture.isNotEmpty
-                    ? NetworkImage(profilePicture)
-                    : AssetImage('assets/default_profile.jpg') as ImageProvider,
-              ),
-              title: Text(username),
-              onTap: () {
-                // Navigate to FollowedUser page when a username is tapped
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FollowedUser(username: username),
-                  ),
-                );
-              },
-              trailing: ElevatedButton(
-                onPressed: () {
-                  // Handle unfollow action
-                  unfollow(username);
-                },
-                child: Text("Unfollow"),
-              ),
-            );
           },
         );
       },
@@ -140,51 +153,60 @@ class _SearchUsersState extends State<SearchUsers> {
         child: Text("No user found."),
       );
     } else {
-      return FutureBuilder<Map<String, dynamic>>(
-        future: DatabaseService(uid: _auth.currentUser!.uid).getUserData(foundUser),
+      return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('users')
+            .where('username', isEqualTo: foundUser)
+            .limit(1)
+            .snapshots()
+            .map((snapshot) => snapshot.docs.first),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return ListTile(
-              leading: CircleAvatar(),
-              title: Text(foundUser),
+          if (snapshot.hasData) {
+            final userData = snapshot.data!.data() as Map<String, dynamic>?;
+            final profilePicture = userData?['profilePicture'] ?? '';
+            return Expanded(
+              child: ListView(
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: profilePicture.isNotEmpty
+                          ? NetworkImage(profilePicture)
+                          : AssetImage('assets/default_profile.jpg') as ImageProvider,
+                    ),
+                    title: Text(foundUser),
+                    onTap: () {
+                      // Navigate to FollowedUser page when the username is tapped
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FollowedUser(username: foundUser),
+                        ),
+                      );
+                    },
+                    trailing: ElevatedButton(
+                      onPressed: () {
+                        // Handle follow/unfollow action
+                        if (followingStatus == "following") {
+                          unfollow(foundUser);
+                        } else if (followingStatus == "not_following") {
+                          follow(foundUser);
+                        }
+                      },
+                      child: Text(followingStatus == "not_following" ? "Follow" : "Unfollow"),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error loading user data'),
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
             );
           }
-          final userData = snapshot.data ?? {};
-          final profilePicture = userData['profilePicture'] ?? '';
-          return Expanded(
-            child: ListView(
-              children: [
-                ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: profilePicture.isNotEmpty
-                        ? NetworkImage(profilePicture)
-                        : AssetImage('assets/default_profile.jpg') as ImageProvider,
-                  ),
-                  title: Text(foundUser),
-                  onTap: () {
-                    // Navigate to FollowedUser page when the username is tapped
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FollowedUser(username: foundUser),
-                      ),
-                    );
-                  },
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      // Handle follow/unfollow action
-                      if (followingStatus == "following") {
-                        unfollow(foundUser);
-                      } else if (followingStatus == "not_following") {
-                        follow(foundUser);
-                      }
-                    },
-                    child: Text(followingStatus == "not_following" ? "Follow" : "Unfollow"),
-                  ),
-                ),
-              ],
-            ),
-          );
         },
       );
     }
