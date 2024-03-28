@@ -15,6 +15,8 @@ class _EditAccountState extends State<EditAccount> {
   late TextEditingController _passwordController;
   late TextEditingController _confirmPasswordController;
   String _profilePicture = '';
+  bool _isUsernameEditable = false;
+  bool _isPasswordEditable = false;
 
   @override
   void initState() {
@@ -120,59 +122,187 @@ class _EditAccountState extends State<EditAccount> {
     }
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: Text('Edit Profile'),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.amber[400],
       ),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: GestureDetector(
-                  onTap: _uploadProfilePicture,
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
+              Container(
+                height: 285,
+                color: Color.fromARGB(215, 248, 245, 90),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: _uploadProfilePicture,
+                      child: CircleAvatar(
+                        radius: 110,
                         backgroundImage: _profilePicture.isNotEmpty
                             ? NetworkImage(_profilePicture)
-                            : const AssetImage('assets/default_profile.jpg') as ImageProvider,
-                        backgroundColor: Colors.grey[200],
+                            : AssetImage('assets/default_profile.jpg') as ImageProvider,
                       ),
-                      const SizedBox(height: 8),
-                      const Text('Choose a new profile picture'),
-                    ],
+                    ),
+                    SizedBox(height: 14),
+                    Text(
+                      'Edit Profile Picture',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildUsernameField(),
+                    SizedBox(height: 20),
+                    _buildDivider(),
+                    SizedBox(height: 20),
+                    _buildPasswordField(),
+                    SizedBox(height: 40),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _updateProfile,
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: Text(
+                          'Save Changes',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUsernameField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'USERNAME',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                setState(() {
+                  _isUsernameEditable = !_isUsernameEditable;
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(height: 7),
+        _isUsernameEditable
+            ? TextFormField(
+                
+                controller: _usernameController,
+                decoration: InputDecoration(
+                  labelText: "New Username",
+                  contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              )
+            : Text(
+                _usernameController.text,
+                style: TextStyle(fontSize: 18),
+              ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              'PASSWORD',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                setState(() {
+                  _isPasswordEditable = !_isPasswordEditable;
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(height: 7),
+
+        if (!_isPasswordEditable)
+          Text(
+            '********',
+            style: TextStyle(fontSize: 18),
+          ),
+        if (_isPasswordEditable)
+         
+          Column(
+            children: [
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'New Password',
+                  contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a username';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'New Password'),
-                obscureText: true,
-              ),
-              const SizedBox(height: 16),
+              SizedBox(height: 20),
               TextFormField(
                 controller: _confirmPasswordController,
-                decoration: const InputDecoration(labelText: 'Confirm New Password'),
                 obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 validator: (value) {
                   if (value != _passwordController.text) {
                     return 'Passwords do not match';
@@ -180,15 +310,16 @@ class _EditAccountState extends State<EditAccount> {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: const Text('Save'),
-              ),
             ],
           ),
-        ),
-      ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 1,
+      color: Colors.grey[400],
     );
   }
 }
