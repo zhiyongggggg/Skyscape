@@ -40,12 +40,31 @@ class ProfileMainWidget extends StatefulWidget {
 class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  late Stream<DocumentSnapshot> _userStream;
+  @override
+  void initState() {
+    super.initState();
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      _userStream = FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .snapshots();
+    }
+  }
+
   
   
   @override
   Widget build(BuildContext context) {
-    
-    
+  final email = FirebaseAuth.instance.currentUser?.email ?? '';  
+  return StreamBuilder<DocumentSnapshot>(
+      stream: _userStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final userData = snapshot.data!.data() as Map<String, dynamic>?;
+          final username = userData?['username'] ?? '';
+          final profilePicture = userData?['profilePicture'] ?? '';  
 
     return Scaffold(
       //key: scaffoldKey,
@@ -82,7 +101,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   child: Padding(
                     padding: EdgeInsetsDirectional.fromSTEB(20, 50, 0, 30),
                     child: Text(
-                      'Welcome',
+                      'Welcome, ' + '$username',
                       textAlign: TextAlign.start,
                       style: FlutterFlowTheme.of(context).bodyMedium.override(
                             fontFamily: 'Readex Pro',
@@ -406,5 +425,11 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
         ),
       ),
     );
-  }
+  }else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }return Center(child: CircularProgressIndicator());
+      }
+  );
+  
+}
 }
