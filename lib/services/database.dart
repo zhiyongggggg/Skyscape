@@ -139,30 +139,53 @@ class DatabaseService {
     }, SetOptions(merge: true));
   }
 
-Future<void> savePhotoUrl(String photoUrl, String userId) async {
-  final timestamp = DateTime.now().millisecondsSinceEpoch;
-
-  final photoData = {
-    'url': photoUrl,
-    'timestamp': timestamp,
-    'userId': userId,
-  };
-
-  return await userCollection.doc(uid).update({
-    'photos': FieldValue.arrayUnion([photoData]),
-  });
-}
 
 
+  Future<List<Map<String, dynamic>>> getFollowingPhotos(List<String> followingList) async {
+    final List<Map<String, dynamic>> photos = [];
+
+    for (String userId in followingList) {
+      final snapshot = await userCollection.doc(userId).get();
+      final data = snapshot.data() as Map<String, dynamic>?;
+      final userPhotos = data?['photoURLs'] as List<dynamic>? ?? [];
+      final username = data?['username'] as String? ?? 'Anonymous';
+
+      final userPhotosWithUsername = userPhotos.map((photo) {
+        return {
+          'url': photo['url'],
+          'username': username,
+        };
+      }).toList();
+
+      photos.addAll(userPhotosWithUsername);
+    }
+
+    return photos;
+  }
+
+
+  Future<void> savePhotoUrl(String photoUrl) async {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    final photoData = {
+      'url': photoUrl,
+      'timestamp': timestamp,
+    };
+
+    return await userCollection.doc(uid).update({
+      'photoURLs': FieldValue.arrayUnion([photoData]),
+    });
+  }
 
   // Add a method to get the photo data for the current user
   Stream<List<Map<String, dynamic>>> get userPhotos {
     return userCollection.doc(uid).snapshots().map((snapshot) {
       final data = snapshot.data() as Map<String, dynamic>?;
-      final photos = data?['photos'] as List<dynamic>? ?? [];
+      final photos = data?['photoURLs'] as List<dynamic>? ?? [];
       return photos.cast<Map<String, dynamic>>();
     });
   }
+
   Future<Map<String, dynamic>> getUserData(String uid) async {
     DocumentSnapshot snapshot = await userCollection.doc(uid).get();
     if (snapshot.exists) {

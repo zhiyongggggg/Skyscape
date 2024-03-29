@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skyscape/screens/settings/account.dart';
 import 'package:skyscape/screens/settings/bugreport.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
+import 'package:skyscape/screens/settings/personalprofile.dart';
 import "package:skyscape/services/auth.dart";
 import 'package:flutterflow_ui/flutterflow_ui.dart';
 import 'package:flutter/material.dart';
@@ -119,7 +120,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                     hoverColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     onTap: () async {
-                      //Navigator.push(context, MaterialPageRoute(builder: (context) => <Replace this with the new widget>()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => PersonalProfile()));
                     },
                   child: Container(
                     width: double.infinity,

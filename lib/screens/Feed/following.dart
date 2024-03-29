@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:skyscape/screens/loading/loading.dart';
-import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:skyscape/services/auth.dart';
 
 class FollowingPage extends StatefulWidget {
   const FollowingPage({Key? key}) : super(key: key);
@@ -12,55 +11,29 @@ class FollowingPage extends StatefulWidget {
 }
 
 class _FollowingPageState extends State<FollowingPage> {
-  final AuthService _auth = AuthService();
-  List<String> followingList = [];
-  List<Map<String, dynamic>> _photos = [];
   final _databaseService = DatabaseService();
+  final AuthService _auth = AuthService();
+  List<Map<String, dynamic>> _photos = [];
+  List<String> _followingList = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _getFollowingList();
-  }
-
-  Future<void> _getFollowingList() async {
-    final uid = _auth.currentUser!.uid;
-    final databaseService = DatabaseService(uid: uid);
-    final following = await databaseService.getFollowingList();
-    setState(() {
-      followingList = following;
-    });
-    await _fetchPhotos();
-    setState(() {
-      _isLoading = false;
-    });
+    _fetchPhotos();
   }
 
   Future<void> _fetchPhotos() async {
-    final storageRef = FirebaseStorage.instance.ref().child('photos');
-    final listResult = await storageRef.listAll();
-
-    final photos = await Future.wait(
-      listResult.items.map((ref) async {
-        final metadata = await ref.getMetadata();
-        final username = metadata.customMetadata?['username'] ?? 'Anonymous';
-        final url = await ref.getDownloadURL();
-        return {
-          'url': url,
-          'username': username,
-        };
-      }),
-    );
-
-    final followingPhotos = photos.where((photo) {
-      final username = photo['username'];
-      return followingList.contains(username);
-    }).toList();
-
-    setState(() {
-      _photos = followingPhotos;
-    });
+    final currentUser = _auth.currentUser;
+    if (currentUser != null) {
+      final followingList = await DatabaseService(uid: currentUser.uid).getFollowingList();
+      final photos = await _databaseService.getFollowingPhotos(followingList);
+      setState(() {
+        _photos = photos;
+        _followingList = followingList;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -134,9 +107,39 @@ class _FollowingPageState extends State<FollowingPage> {
                     ),
                   ),
                 )
-              : const Center(
-                  child: Text('No photos posted by followed users.'),
-                ),
+              : _followingList.isNotEmpty
+                  ? SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Following:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(height: 16),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: _followingList.length,
+                              itemBuilder: (context, index) {
+                                final username = _followingList[index];
+                                return ListTile(
+                                  title: Text(username),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : const Center(
+                      child: Text('You are not following any users.'),
+                    ),
     );
   }
 }

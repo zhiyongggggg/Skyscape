@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:skyscape/screens/loading/loading.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/screens/Feed/following.dart';
+import 'package:skyscape/services/auth.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -14,6 +14,7 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin {
   final _databaseService = DatabaseService();
+  final AuthService _auth = AuthService();
   late TabController _tabController;
 
   @override
@@ -28,23 +29,20 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
-  Future<List<Map<String, dynamic>>> _fetchPhotos() async {
-    final storageRef = FirebaseStorage.instance.ref().child('photos');
-    final listResult = await storageRef.listAll();
-
-    final photos = await Future.wait(
-      listResult.items.take(20).map((ref) async {
-        final metadata = await ref.getMetadata();
-        final username = metadata.customMetadata?['username'] ?? 'Anonymous';
-        final url = await ref.getDownloadURL();
-        return {
-          'url': url,
-          'username': username,
-        };
-      }),
-    );
-
-    return photos;
+  Stream<List<Map<String, dynamic>>> _fetchPhotos() {
+    return _databaseService.userCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data() as Map<String, dynamic>?;
+        final photos = data?['photoURLs'] as List<dynamic>? ?? [];
+        final username = data?['username'] as String? ?? 'Anonymous';
+        return photos.map((photo) {
+          return {
+            'url': photo['url'],
+            'username': username,
+          };
+        }).toList();
+      }).expand((element) => element).toList();
+    });
   }
 
   @override
@@ -81,8 +79,8 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
                       stops: [0.1, 0.3, 0.5, 0.8],
                     ),
                   ),
-                  child: FutureBuilder<List<Map<String, dynamic>>>(
-                    future: _fetchPhotos(),
+                  child: StreamBuilder<List<Map<String, dynamic>>>(
+                    stream: _fetchPhotos(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Loading();
@@ -110,7 +108,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Posted by ' + photo['username'],
+                                            'Posted by ${photo['username']}',
                                             style: TextStyle(
                                               fontWeight: FontWeight.normal,
                                               color: Colors.grey[800],
@@ -154,7 +152,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
                     },
                   ),
                 ),
-                const FollowingPage(),
+                FollowingPage(),
               ],
             ),
           ),

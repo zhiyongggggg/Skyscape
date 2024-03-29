@@ -1,50 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:skyscape/services/auth.dart';
 
-class FollowedUser extends StatefulWidget {
-  final String username;
-
-  const FollowedUser({required this.username});
+class PersonalProfile extends StatefulWidget {
+  const PersonalProfile({super.key});
 
   @override
-  _FollowedUserState createState() => _FollowedUserState();
+  State<PersonalProfile> createState() => _PersonalProfileState();
 }
 
-class _FollowedUserState extends State<FollowedUser> {
+class _PersonalProfileState extends State<PersonalProfile> {
+  final AuthService _authService = AuthService();
   late Stream<DocumentSnapshot> _userStream;
   late Stream<List<Map<String, dynamic>>> _photosStream;
 
   @override
   void initState() {
     super.initState();
-    _userStream = FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: widget.username)
-        .limit(1)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.first);
+    final currentUser = _authService.currentUser;
+    if (currentUser != null) {
+      _userStream = FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .snapshots();
 
-    _photosStream = FirebaseFirestore.instance
-        .collection('users')
-        .where('username', isEqualTo: widget.username)
-        .limit(1)
-        .snapshots()
-        .map((snapshot) {
-          final data = snapshot.docs.first.data() as Map<String, dynamic>?;
-          final photos = data?['photoURLs'] as List<dynamic>? ?? [];
-          return photos.map((photo) {
-            return {
-              'url': photo['url'],
-            };
-          }).toList();
-        });
+      _photosStream = FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .snapshots()
+          .map((snapshot) {
+            final data = snapshot.data() as Map<String, dynamic>?;
+            final photos = data?['photoURLs'] as List<dynamic>? ?? [];
+            return photos.map((photo) {
+              return {
+                'url': photo['url'],
+              };
+            }).toList();
+          });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.username),
+        title: Text('Personal Profile'),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.amber[400],
@@ -55,6 +55,7 @@ class _FollowedUserState extends State<FollowedUser> {
           if (snapshot.hasData) {
             final userData = snapshot.data!.data() as Map<String, dynamic>?;
             final profilePicture = userData?['profilePicture'] ?? '';
+            final username = userData?['username'] ?? '';
 
             return SingleChildScrollView(
               child: Column(
@@ -79,7 +80,16 @@ class _FollowedUserState extends State<FollowedUser> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Images posted by ${widget.username}',
+                          username,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          'Images posted',
+                          
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,

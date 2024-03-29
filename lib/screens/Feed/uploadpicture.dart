@@ -29,48 +29,46 @@ class _UploadPictureState extends State<UploadPicture> {
       });
     }
   }
-  Future<void> _uploadImage() async {
+Future<void> _uploadImage() async {
+  if (_selectedImage == null) return;
 
-    final userData = await DatabaseService(uid: _auth.currentUser!.uid).getUserData(_auth.currentUser!.uid);
-    final username = userData['username'] ?? 'Anonymous';
-    if (_selectedImage == null) return;
+  setState(() {
+    _isUploading = true;
+  });
+
+  try {
+    // Generate a unique file path for the uploaded photo
+    final fileExtension = _selectedImage!.path.split('.').last;
+    final fileName = '${_auth.currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
+    final storageRef = FirebaseStorage.instance.ref().child('photos/$fileName');
+
+    // Upload image to Firebase Storage
+    final uploadTask = storageRef.putFile(_selectedImage!);
+    final snapshot = await uploadTask.whenComplete(() {});
+
+    // Get the download URL of the uploaded photo
+    final downloadUrl = await snapshot.ref.getDownloadURL();
+
+    // Save the photo URL to the user's document in Firestore
+    await DatabaseService(uid: _auth.currentUser!.uid).savePhotoUrl(downloadUrl);
 
     setState(() {
-      _isUploading = true;
+      _selectedImage = null;
+      _isUploading = false;
     });
 
-    try {
-      // Generate a unique file path for the uploaded photo
-      final fileExtension = _selectedImage!.path.split('.').last;
-      final fileName = '${_auth.currentUser!.uid}_${DateTime.now().millisecondsSinceEpoch}.$fileExtension';
-      final storageRef = FirebaseStorage.instance.ref().child('photos/$fileName');
-
-      // Upload image to Firebase Storage with metadata
-      final metadata = SettableMetadata(
-        customMetadata: {
-          'username': username ?? 'Anonymous',
-        },
-      );
-      final uploadTask = storageRef.putFile(_selectedImage!, metadata);
-      await uploadTask.whenComplete(() {});
-
-      setState(() {
-        _selectedImage = null;
-        _isUploading = false;
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image uploaded successfully')),
-      );
-    } catch (e) {
-      setState(() {
-        _isUploading = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error uploading image: $e')),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Image uploaded successfully')),
+    );
+  } catch (e) {
+    setState(() {
+      _isUploading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error uploading image: $e')),
+    );
   }
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
