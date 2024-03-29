@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class FollowedUser extends StatefulWidget {
   final String username;
@@ -35,8 +36,10 @@ class _FollowedUserState extends State<FollowedUser> {
           return photos.map((photo) {
             return {
               'url': photo['url'],
+              'timestamp': photo['timestamp'],
             };
-          }).toList();
+          }).toList()
+            ..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
         });
   }
 
@@ -104,15 +107,35 @@ class _FollowedUserState extends State<FollowedUser> {
                                       itemCount: photos.length,
                                       itemBuilder: (context, index) {
                                         final photo = photos[index];
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            image: DecorationImage(
-                                              image: NetworkImage(photo['url']),
-                                              fit: BoxFit.cover,
+                                        final timestamp = photo['timestamp'] as int?;
+                                        final formattedTime = timestamp != null
+                                            ? DateFormat('yyyy-MM-dd HH:mm').format(
+                                                DateTime.fromMillisecondsSinceEpoch(timestamp),
+                                              )
+                                            : '';
+                                        return Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              height: 300,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                image: DecorationImage(
+                                                  image: NetworkImage(photo['url']),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              formattedTime,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          ],
                                         );
                                       },
                                     )

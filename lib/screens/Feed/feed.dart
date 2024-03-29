@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:skyscape/screens/Feed/uploadpicture.dart';
 import 'package:skyscape/screens/loading/loading.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/screens/Feed/following.dart';
 import 'package:skyscape/services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:skyscape/screens/Search/followedusers.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -35,14 +38,27 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
         final data = doc.data() as Map<String, dynamic>?;
         final photos = data?['photoURLs'] as List<dynamic>? ?? [];
         final username = data?['username'] as String? ?? 'Anonymous';
+        final userId = doc.id;
         return photos.map((photo) {
           return {
             'url': photo['url'],
             'username': username,
+            'userId': userId,
+            'timestamp': photo['timestamp'],
           };
         }).toList();
-      }).expand((element) => element).toList();
+      }).expand((element) => element).toList()
+        ..sort((a, b) => b['timestamp'].compareTo(a['timestamp']));
     });
+  }
+
+  void _navigateToFollowedUser(String username) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FollowedUser(username: username),
+      ),
+    );
   }
 
   @override
@@ -104,38 +120,80 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
                                     itemCount: photos.length,
                                     itemBuilder: (context, index) {
                                       final photo = photos[index];
-                                      return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Posted by ${photo['username']}',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.grey[800],
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Expanded(
-                                            child: Container(
-                                              height: 200,
-                                              decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(8),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: Colors.black.withOpacity(0.1),
-                                                    blurRadius: 4,
-                                                    offset: const Offset(0, 2),
+                                      final timestamp = photo['timestamp'] as int?;
+                                      final formattedTime = timestamp != null
+                                          ? DateFormat('yyyy-MM-dd HH:mm').format(
+                                              DateTime.fromMillisecondsSinceEpoch(timestamp),
+                                            )
+                                          : '';
+                                      final userId = photo['userId'];
+                                      final username = photo['username'];
+                                      return StreamBuilder<DocumentSnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(userId)
+                                            .snapshots(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasData) {
+                                            final userData = snapshot.data!.data() as Map<String, dynamic>?;
+                                            final profilePicture = userData?['profilePicture'] ?? '';
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                ListTile(
+                                                  leading: GestureDetector(
+                                                    onTap: () => _navigateToFollowedUser(username),
+                                                    child: CircleAvatar(
+                                                      backgroundImage: profilePicture.isNotEmpty
+                                                          ? NetworkImage(profilePicture)
+                                                          : AssetImage('assets/default_profile.jpg') as ImageProvider,
+                                                    ),
                                                   ),
-                                                ],
-                                                image: DecorationImage(
-                                                  image: NetworkImage(photo['url']),
-                                                  fit: BoxFit.cover,
+                                                  title: GestureDetector(
+                                                    onTap: () => _navigateToFollowedUser(username),
+                                                    child: Text(username),
+                                                  ),
                                                 ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                                const SizedBox(height: 8),
+                                                Expanded(
+                                                  child: Container(
+                                                    height: 200,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.black.withOpacity(0.1),
+                                                          blurRadius: 4,
+                                                          offset: const Offset(0, 2),
+                                                        ),
+                                                      ],
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(photo['url']),
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text(
+                                                  formattedTime,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.grey[600],
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          } else if (snapshot.hasError) {
+                                            return Center(
+                                              child: Text('Error loading user data'),
+                                            );
+                                          } else {
+                                            return Center(
+                                              child: CircularProgressIndicator(),
+                                            );
+                                          }
+                                        },
                                       );
                                     },
                                   ),
