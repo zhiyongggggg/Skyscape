@@ -459,7 +459,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                           child: Text(
                                                             '${allValues[widget.location]?[2] ?? "N/A"}AQI',
                                                             style: TextStyle(
-                                                              fontSize: 28,
+                                                              fontSize: 22,
                                                               fontWeight: FontWeight.bold,
                                                               color: Colors.white,
                                                             ),
