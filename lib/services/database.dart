@@ -141,6 +141,28 @@ class DatabaseService {
 
 
 
+  Future<List<Map<String, dynamic>>> getFollowingPhotos(List<String> followingList) async {
+    final List<Map<String, dynamic>> photos = [];
+
+    for (String userId in followingList) {
+      final snapshot = await userCollection.doc(userId).get();
+      final data = snapshot.data() as Map<String, dynamic>?;
+      final userPhotos = data?['photoURLs'] as List<dynamic>? ?? [];
+      final username = data?['username'] as String? ?? 'Anonymous';
+
+      final userPhotosWithUsername = userPhotos.map((photo) {
+        return {
+          'url': photo['url'],
+          'username': username,
+        };
+      }).toList();
+
+      photos.addAll(userPhotosWithUsername);
+    }
+
+    return photos;
+  }
+
 
   Future<void> savePhotoUrl(String photoUrl) async {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
