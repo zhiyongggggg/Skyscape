@@ -121,7 +121,7 @@ class _RegisterState extends State<Register> {
                         return 'Please enter a password';
                       }
                       if (!passwordRegex.hasMatch(val)) {
-                        return 'Password must be at least 8 characters long and include at least one capital letter and one number';
+                        return 'Password must be at least 8 characters long\n and include at least one capital letter\n and one number';
                       }
                       return null;
                     },
@@ -156,7 +156,7 @@ class _RegisterState extends State<Register> {
               ),
 
 
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 20.0),
               Text.rich(
                 TextSpan(
                   text: 'Already have an account? Click ',
