@@ -64,8 +64,14 @@ class _FollowedUserState extends State<FollowedUser> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                              color: Colors.amber[400],
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(190),
+                              bottomRight: Radius.circular(190),
+                            ),),
                     height: 200,
-                    color: Color.fromARGB(215, 248, 245, 90),
+                    //color: Color.fromARGB(215, 248, 245, 90),
                     child: Center(
                       child: CircleAvatar(
                         radius: 80,

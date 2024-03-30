@@ -4,6 +4,7 @@ import 'package:skyscape/screens/home/home.dart';
 import 'package:skyscape/services/database.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SearchUsers extends StatefulWidget {
   const SearchUsers({super.key});

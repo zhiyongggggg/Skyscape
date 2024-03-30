@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skyscape/services/storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class EditAccount extends StatefulWidget {
   @override
@@ -128,7 +129,7 @@ class _EditAccountState extends State<EditAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Profile'),
+        title: Text(style: GoogleFonts.lobster(fontSize: 30), 'Edit Profile'),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.amber[400],
@@ -140,8 +141,14 @@ class _EditAccountState extends State<EditAccount> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
+                decoration: BoxDecoration(
+                              color: Colors.amber[400],
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(100),
+                              bottomRight: Radius.circular(100),
+                            ),),
                 height: 285,
-                color: Color.fromARGB(215, 248, 245, 90),
+                //color: Color.fromARGB(215, 248, 245, 90),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -155,9 +162,9 @@ class _EditAccountState extends State<EditAccount> {
                       ),
                     ),
                     SizedBox(height: 14),
-                    Text(
-                      'Edit Profile Picture',
-                      style: TextStyle(fontSize: 18),
+                    Text(style: GoogleFonts.lobster(fontSize: 20),
+                      'edit',
+                      
                     ),
                   ],
                 ),

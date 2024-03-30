@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:skyscape/screens/Feed/feed.dart';
 import 'dart:convert';
 import 'dart:math';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/Search/users.dart';
 import 'package:skyscape/screens/settings/profile.dart';
@@ -159,6 +159,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
+          style: GoogleFonts.lobster(fontSize: 30),
           currentIndex == 0
               ? 'Saved Locations'
               : currentIndex == 1

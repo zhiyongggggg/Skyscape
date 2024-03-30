@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:skyscape/screens/settings/editaccount.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Account extends StatefulWidget {
   @override
@@ -37,7 +38,7 @@ class _AccountState extends State<Account> {
 
           return Scaffold(
             appBar: AppBar(
-              title: Text('Account'),
+              title: Text(style: GoogleFonts.lobster(fontSize: 30),'Account'),
               centerTitle: true,
               elevation: 0,
               backgroundColor: Colors.amber[400],
@@ -47,8 +48,14 @@ class _AccountState extends State<Account> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                              color: Colors.amber[400],
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(100),
+                              bottomRight: Radius.circular(100),
+                            ),),
+                    
                     height: 285,
-                    color: Color.fromARGB(215, 248, 245, 90),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -59,9 +66,9 @@ class _AccountState extends State<Account> {
                               : AssetImage('assets/default_profile.jpg') as ImageProvider,
                         ),
                         SizedBox(height: 14),
-                        Text(
+                        Text( style: GoogleFonts.lobster(fontSize: 18),
                           'Profile Picture',
-                          style: TextStyle(fontSize: 18),
+                          
                         ),
                       ],
                     ),

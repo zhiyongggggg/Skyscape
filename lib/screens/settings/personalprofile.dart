@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:intl/intl.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:skyscape/flutter_flow_theme.dart';
 class PersonalProfile extends StatefulWidget {
   const PersonalProfile({super.key});
 
@@ -47,7 +48,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Profile'),
+        title: Text('Personal Profile', style: GoogleFonts.lobster(fontSize: 30)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.amber[400],
@@ -65,8 +66,14 @@ class _PersonalProfileState extends State<PersonalProfile> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
+                    decoration: BoxDecoration(
+                              color: Colors.amber[400],
+                              borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(190),
+                              bottomRight: Radius.circular(190),
+                            ),),
                     height: 200,
-                    color: Color.fromARGB(215, 248, 245, 90),
+                    
                     child: Center(
                       child: CircleAvatar(
                         radius: 80,

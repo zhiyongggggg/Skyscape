@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:skyscape/screens/Search/users.dart';
+ import 'dart:ui' as ui;
 
 
 class ProfileMainWidget extends StatefulWidget {
@@ -87,7 +88,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                       colors: [
                         const Color.fromARGB(255, 255, 225, 181)!,
                         Colors.orange[100]!,
-                        Color.fromARGB(255, 243, 213, 245)!,
+                        Color.fromARGB(255, 244, 213, 245)!,
                         Color.fromARGB(255, 250, 217, 182)!,
                       ],
                       stops: [0.1, 0.3, 0.5, 0.8],
@@ -104,11 +105,20 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                     child: Text(
                       'Welcome, ' + '$username',
                       textAlign: TextAlign.start,
-                      style: FlutterFlowTheme.of(context).bodyMedium.override(
-                            fontFamily: 'Readex Pro',
-                            color: FlutterFlowTheme.of(context).primaryText,
-                            fontSize: 30,
+                      style: GoogleFonts.pacifico(
+                      
+                            fontSize: 40,
+                              foreground: Paint()
+                              ..shader = ui.Gradient.linear(
+                              const Offset(0, 100),
+                              
+                              const Offset(150, 20),
+                               <Color>[
+                               Color.fromARGB(255, 247, 224, 23),
+                               Color.fromARGB(255, 231, 94, 15),
+                              ],
                           ),
+                      )
                     ),
                   ),
                 ),
@@ -166,7 +176,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .primaryText,
-                                                fontSize: 16,
+                                                fontSize: 30,
                                               ),
                                         ),
                                       ),
@@ -200,11 +210,12 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   ),
                 ),
                 ),
-                Divider(
+                /*Divider(
                   thickness: 1,
-                  indent: 90,
+                  indent: 0,
                   color: FlutterFlowTheme.of(context).primaryText,
-                ),
+                ),*/
+                SizedBox(height: 60),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                   child: InkWell(
@@ -259,7 +270,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                                 color:
                                                     FlutterFlowTheme.of(context)
                                                         .primaryText,
-                                                fontSize: 16,
+                                                fontSize: 30,
                                               ),
                                         ),
                                       ),
@@ -273,7 +284,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                   padding: EdgeInsetsDirectional.fromSTEB(
                                       20, 0, 0, 0),
                                   child: Text(
-                                    'Overview, security information, and content',
+                                    'Edit profile picture and account information',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -293,11 +304,12 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   ),
                 ),
                 ),
-                Divider(
+                /*Divider(
                   thickness: 1,
                   indent: 90,
                   color: FlutterFlowTheme.of(context).primaryText,
-                ),
+                ),*/
+                SizedBox(height: 60),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                   child: InkWell(
@@ -352,10 +364,9 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                                 .bodyLarge
                                                 .override(
                                                   fontFamily: 'Readex Pro',
-                                                  color: FlutterFlowTheme.of(
-                                                          context)
-                                                      .primaryText,
-                                                  fontSize: 16,
+                                                  color:FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                                  fontSize: 30,
                                                 ),
                                           ),
                                         ),
@@ -374,8 +385,9 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                           .bodyMedium
                                           .override(
                                             fontFamily: 'Readex Pro',
-                                            color: FlutterFlowTheme.of(context)
-                                                .primaryText,
+                                            color:FlutterFlowTheme.of(context)
+                                              .primaryText,
+                                              fontSize: 12,
                                           ),
                                     ),
                                   ),
@@ -388,11 +400,11 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                     ),
                   ),
                 ),
-                Divider(
+                /*Divider(
                   thickness: 1,
                   indent: 90,
                   color: FlutterFlowTheme.of(context).primaryText,
-                ),
+                ),*/
                 Align(
                   alignment: AlignmentDirectional(0, -1),
                   child: Padding(
