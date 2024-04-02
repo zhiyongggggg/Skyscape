@@ -153,132 +153,145 @@ class _HomeState extends State<Home> {
       favouritedLocationNames.remove(location);
     });
   }
-
   @override
   Widget build(BuildContext context) {
+      
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          style: GoogleFonts.lobster(fontSize: 30),
-          currentIndex == 0
-              ? 'Saved Locations'
-              : currentIndex == 1
-                  ? 'Search for Users'
-                  : currentIndex == 2
-                      ? 'Explore'
-                      : 'Profile',
-  ),
-        centerTitle: true,
-        backgroundColor: Colors.amber[400],
-        elevation: 0.0,
-          actions: <Widget>[
-            if (currentIndex == 0)
-              FloatingActionButton.small(
-                child: const Icon(Icons.add, size: 20),
-                shape: CircleBorder(),
-                backgroundColor: Color.fromARGB(220, 252, 249, 242),
-                elevation: 1,
-                
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
-                  );
-                },
-                
-              ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.orange[300]!, Colors.orange[200]!],
+            ),
+          ),
+          child: IndexedStack(
+            index: currentIndex,
+            children: [
+              buildHomeScreen(),
+              SearchUsers(),
+              FeedPage(),
+              ProfileMainWidget(),
+            ],
+          ),
+        ),
+      // ),
+      bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: currentIndex,
+          onTap: (index) => setState(() => currentIndex = index),
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people_alt_rounded),
+              label: 'Users',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera_alt),
+              label: 'Feed',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Profile',
+            ),
           ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
+        ),
+    );
+  }
+
+  Widget buildHomeScreen() {
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              title: Text(
+                style: GoogleFonts.lobster(fontSize: 30),
+	              'Saved Locations',
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.amber[400],
+              elevation: 0.0,
+                actions: <Widget>[
+                  if (currentIndex == 0)
+                    FloatingActionButton.small(
+                      child: const Icon(Icons.add, size: 20),
+                      shape: CircleBorder(),
+                      backgroundColor: Color.fromARGB(220, 252, 249, 242),
+                      elevation: 1,
+                      
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
+                        );
+                      },
+                      
+                    ),
+                ],
+            )
+          ];
+        },
+        body: Container(
+          decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [Colors.orange[300]!, Colors.orange[200]!],
           ),
         ),
-        child: IndexedStack(
-          index: currentIndex,
-          children: [
-            buildHomeScreen(),
-            SearchUsers(),
-            FeedPage(),
-            ProfileMainWidget(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: (index) => setState(() => currentIndex = index),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people_alt_rounded),
-            label: 'Users',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt),
-            label: 'Feed',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Profile',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget buildHomeScreen() {
-    return Column(
-      children: [
-        TableCalendar(
-          calendarFormat: CalendarFormat.week,
-          focusedDay: _selectedDate,
-          firstDay: DateTime.now().subtract(Duration(days: 365)),
-          lastDay: DateTime.now().add(Duration(days: 7)),
-          headerStyle: HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-            titleTextStyle: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-            ),
-            leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
-            rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
-          ),
-          selectedDayPredicate: (DateTime date) {
-            return isSameDay(date, _selectedDate);
-          },
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDate = selectedDay;
-              String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
-              getData(selectedDateString);
-            });
-          },
-          daysOfWeekStyle: DaysOfWeekStyle(
-            weekdayStyle: TextStyle(color: Colors.white),
-            weekendStyle: TextStyle(color: Colors.white),
-          ),
-          calendarStyle: CalendarStyle(
-            defaultTextStyle: TextStyle(color: Colors.white),
-            selectedDecoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-            ),
-            selectedTextStyle: TextStyle(color: Colors.orange),
+          child: Column(
+            children: [
+              TableCalendar(
+                calendarFormat: CalendarFormat.week,
+                focusedDay: _selectedDate,
+                firstDay: DateTime.now().subtract(Duration(days: 365)),
+                lastDay: DateTime.now().add(Duration(days: 7)),
+                headerStyle: HeaderStyle(
+                  formatButtonVisible: false,
+                  titleCentered: true,
+                  titleTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                  leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+                  rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+                ),
+                selectedDayPredicate: (DateTime date) {
+                  return isSameDay(date, _selectedDate);
+                },
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(() {
+                    _selectedDate = selectedDay;
+                    String selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDay);
+                    getData(selectedDateString);
+                  });
+                },
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(color: Colors.white),
+                  weekendStyle: TextStyle(color: Colors.white),
+                ),
+                calendarStyle: CalendarStyle(
+                  defaultTextStyle: TextStyle(color: Colors.white),
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  selectedTextStyle: TextStyle(color: Colors.orange),
+                ),
+              ),
+              SizedBox(height: 10),
+              Expanded(
+                child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 10),
-        Expanded(
-          child: isLoading ? _buildLoadingWidget() : _buildLocationWidgets(),
+        
         ),
-      ],
     );
   }
 

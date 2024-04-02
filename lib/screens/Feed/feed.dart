@@ -7,6 +7,7 @@ import 'package:skyscape/screens/Feed/following.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:skyscape/screens/Search/followedusers.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({super.key});
@@ -65,14 +66,30 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orange[200],
-      body: Column(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              title: Text(
+                style: GoogleFonts.lobster(fontSize: 30),
+	              'Explore',
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.amber[400],
+              elevation: 0.0,
+            )
+          ];
+        },
+        body: Column(
         children: [
           Container(
             color: Colors.orange[200],
             child: TabBar(
+              labelPadding:
+                EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
               controller: _tabController,
               tabs: const [
-                Tab(text: 'For you'),
+                Tab(text: 'For you',),
                 Tab(text: 'Following'),
               ],
             ),
@@ -216,6 +233,8 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
           ),
         ],
       ),
+      ),
+      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(

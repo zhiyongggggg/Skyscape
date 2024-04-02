@@ -71,8 +71,17 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
     return Scaffold(
       //key: scaffoldKey,
       backgroundColor: FlutterFlowTheme.of(context).tertiary,
+      appBar: AppBar(
+        title: Text(
+                style: GoogleFonts.lobster(fontSize: 30),
+	              'Profile'
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.amber[400],
+              elevation: 0.0,
+      ),
       body: SafeArea(
-        top: true,
+        top: false,
         child: Align(
           alignment: AlignmentDirectional(0, -1),
           child: Container(
@@ -101,7 +110,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 Align(
                   alignment: AlignmentDirectional(-1, 0),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(20, 50, 0, 30),
+                    padding: EdgeInsetsDirectional.fromSTEB(20, 20, 0, 30),
                     child: Text(
                       'Welcome, ' + '$username',
                       textAlign: TextAlign.start,

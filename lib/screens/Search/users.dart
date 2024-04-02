@@ -32,6 +32,15 @@ class _SearchUsersState extends State<SearchUsers> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+                style: GoogleFonts.lobster(fontSize: 30),
+	              'Search for Users'
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.amber[400],
+              elevation: 0.0,
+      ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
