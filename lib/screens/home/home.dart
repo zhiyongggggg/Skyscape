@@ -7,8 +7,8 @@ import 'dart:math';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:skyscape/screens/Search/search.dart';
 import 'package:skyscape/screens/Search/users.dart';
+import 'package:skyscape/screens/home/sort.dart';
 import 'package:skyscape/screens/settings/profile.dart';
-import 'package:skyscape/screens/Feed/uploadpicture.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:skyscape/services/auth.dart';
 import 'package:skyscape/services/database.dart';
@@ -209,40 +209,47 @@ class _HomeState extends State<Home> {
           return <Widget>[
             SliverAppBar(
               title: Text(
+                'Saved Locations',
                 style: GoogleFonts.lobster(fontSize: 30),
-	              'Saved Locations',
               ),
               centerTitle: true,
               backgroundColor: Colors.amber[400],
               elevation: 0.0,
-                actions: <Widget>[
-                  if (currentIndex == 0)
-                    FloatingActionButton.small(
-                      child: const Icon(Icons.add, size: 20),
-                      shape: CircleBorder(),
-                      backgroundColor: Color.fromARGB(220, 252, 249, 242),
-                      elevation: 1,
-                      
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
-                        );
-                      },
-                      
-                    ),
-                ],
+              leading: IconButton(
+                icon: Icon(Icons.sort), // Change the icon as needed
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => sortFavouriteLocation(allValues: allValues,)),
+                  );
+                },
+              ),
+              actions: <Widget>[
+                if (currentIndex == 0)
+                  FloatingActionButton.small(
+                    child: const Icon(Icons.add, size: 20),
+                    shape: CircleBorder(),
+                    backgroundColor: Color.fromARGB(220, 252, 249, 242),
+                    elevation: 1,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddFavouriteLocation()),
+                      );
+                    },
+                  ),
+              ],
             )
           ];
         },
         body: Container(
           decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.orange[300]!, Colors.orange[200]!],
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.orange[300]!, Colors.orange[200]!],
+            ),
           ),
-        ),
           child: Column(
             children: [
               TableCalendar(
@@ -290,10 +297,10 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-        
-        ),
+      ),
     );
   }
+
 
   Widget _buildLoadingWidget() {
     return Center(

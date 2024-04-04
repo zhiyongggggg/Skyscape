@@ -47,6 +47,12 @@ class DatabaseService {
     return [];
   }
 
+  Future<void> sortFavouritedLocations(List<String> locationList) async {
+    return await userCollection.doc(uid).update({
+      'favouritedLocations': locationList,
+    });
+  }
+
   Future<String> findUsernameFromUID(String userid) async {
     DocumentSnapshot snapshot = await userCollection.doc(userid).get();
     if (snapshot.exists) {
