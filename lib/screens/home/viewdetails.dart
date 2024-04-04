@@ -85,6 +85,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     cloudCoverQuality = allValues[widget.location][2] * 0.4;
     humidityQuality = allValues[widget.location][1] * 0.3;
     PSI = allValues[widget.location][4].toDouble();
+    
     if (PSI <= 55) {
       PSIQuality = 80 + ((55 - PSI) / 55 * 20);
     } else {
@@ -93,7 +94,7 @@ class _ViewDetailsState extends State<ViewDetails> {
     PSIQuality = PSIQuality * 0.3;
     sunsetQuality = cloudCoverQuality + humidityQuality + PSIQuality;
     allValues[widget.location].add(sunsetQuality.toStringAsFixed(2));
-
+    print(allValues);
     setState(() {
       isLoading = false; // Set loading state to false after fetching data
     });
@@ -394,7 +395,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                     ),
                                                         child: Center(
                                                           child: Text(
-                                                            '${allValues[widget.location]?[1] ?? "N/A"}%',
+                                                            '${allValues[widget.location]?[2] ?? "N/A"}%',
                                                             style: TextStyle(
                                                               fontSize: 28,
                                                               fontWeight: FontWeight.bold,
@@ -457,7 +458,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                     ),
                                                         child: Center(
                                                           child: Text(
-                                                            '${allValues[widget.location]?[2] ?? "N/A"}AQI',
+                                                            '${allValues[widget.location]?[4] ?? "N/A"}AQI',
                                                             style: TextStyle(
                                                               fontSize: 22,
                                                               fontWeight: FontWeight.bold,
@@ -509,7 +510,7 @@ class _ViewDetailsState extends State<ViewDetails> {
                                                     ),
                                                         child: Center(
                                                           child: Text(
-                                                            '${allValues[widget.location]?[4] ?? "N/A"}%',
+                                                            '${allValues[widget.location]?[1] ?? "N/A"}%',
                                                             style: TextStyle(
                                                               fontSize: 28,
                                                               fontWeight: FontWeight.bold,
