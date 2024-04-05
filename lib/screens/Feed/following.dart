@@ -64,15 +64,15 @@ class _FollowingPageState extends State<FollowingPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color.fromARGB(255, 255, 225, 181)!,
-            Colors.orange[100]!,
-            Color.fromARGB(255, 243, 213, 245)!,
-            Color.fromARGB(255, 250, 217, 182)!,
-          ],
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                        Color.fromARGB(174, 242, 186, 101)!,
+                        Color.fromARGB(154, 251, 214, 158)!,
+                        Color.fromARGB(135, 240, 199, 152)!,
+                        Color.fromARGB(140, 246, 186, 122)!,
+                ],
           stops: [0.1, 0.3, 0.5, 0.8],
         ),
       ),
@@ -85,8 +85,8 @@ class _FollowingPageState extends State<FollowingPage> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
             final photos = snapshot.data!;
-            return photos.isNotEmpty
-                ? SingleChildScrollView(
+            return 
+                 SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(40.0),
                       child: GridView.builder(
@@ -179,10 +179,8 @@ class _FollowingPageState extends State<FollowingPage> {
                         },
                       ),
                     ),
-                  )
-                : const Center(
-                    child: Text('No photos available.'),
                   );
+             
           } else {
             return const Center(
               child: Text('No data available.'),

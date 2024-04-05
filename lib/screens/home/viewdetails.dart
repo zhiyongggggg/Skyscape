@@ -127,11 +127,17 @@ class _ViewDetailsState extends State<ViewDetails> {
   Widget _buildLoadingWidget() {
   return Container(
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [Colors.orange[200]!, Colors.orange[300]!], // Replace with your desired colors
-      ),
+                      gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        Color.fromARGB(255, 251, 214, 158)!,
+                        Color.fromARGB(255, 240, 199, 152)!,
+                        Color.fromARGB(255, 246, 186, 122)!,
+                      ],
+                      stops: [0.1, 0.3, 0.5, 0.8],
+                    ),
     ),
     child: Center(
       child: CircularProgressIndicator(),
@@ -142,19 +148,26 @@ class _ViewDetailsState extends State<ViewDetails> {
   Widget buildMainContent() {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Details'),
+        title: Text('Details'),
+        centerTitle: true,
         backgroundColor: currentIndex == 3
             ? Color.fromARGB(255, 241, 255, 114)
-            : Colors.amber[400],
+            : Color.fromARGB(255, 255, 197, 111)!,
         elevation: 0.0,
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.orange[200]!, Colors.orange[300]!],
-          ),
+                      gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        Color.fromARGB(255, 251, 214, 158)!,
+                        Color.fromARGB(255, 240, 199, 152)!,
+                        Color.fromARGB(255, 246, 186, 122)!,
+                      ],
+                      stops: [0.1, 0.3, 0.5, 0.8],
+                    ),
         ),
         child: Column(
           children: [

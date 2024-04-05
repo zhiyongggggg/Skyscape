@@ -77,7 +77,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
 	              'Profile'
               ),
               centerTitle: true,
-              backgroundColor: Colors.amber[400],
+              backgroundColor: Color.fromARGB(255, 255, 197, 111)!,
               elevation: 0.0,
       ),
       body: SafeArea(
@@ -91,14 +91,14 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
               maxWidth: 570,
             ),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+                          gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        const Color.fromARGB(255, 255, 225, 181)!,
-                        Colors.orange[100]!,
-                        Color.fromARGB(255, 244, 213, 245)!,
-                        Color.fromARGB(255, 250, 217, 182)!,
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        Color.fromARGB(255, 251, 214, 158)!,
+                        Color.fromARGB(255, 240, 199, 152)!,
+                        Color.fromARGB(255, 246, 186, 122)!,
                       ],
                       stops: [0.1, 0.3, 0.5, 0.8],
                     ),  
@@ -123,8 +123,8 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                               
                               const Offset(150, 20),
                                <Color>[
-                               Color.fromARGB(255, 247, 224, 23),
-                               Color.fromARGB(255, 231, 94, 15),
+                               Color.fromARGB(255, 255, 9, 9),
+                               Color.fromARGB(255, 0, 0, 0),
                               ],
                           ),
                       )
@@ -152,7 +152,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                           child: Icon(
                             Icons.account_circle,
                             color: FlutterFlowTheme.of(context).primaryText,
@@ -209,11 +209,15 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                           fontSize: 12,
                                         ),
                                   ),
+                                  
+                        
                                 ),
                               ),
                             ],
+                            
                           ),
                         ),
+
                       ],
                     ),
                   ),
@@ -224,7 +228,15 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   indent: 0,
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),*/
-                SizedBox(height: 60),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    children: [
+                   _buildDivider(),
+                  SizedBox(height: 25),
+                    ]
+                )
+                ),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                   child: InkWell(
@@ -246,7 +258,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding: EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                           child: Icon(
                             Icons.settings_outlined,
                             color: FlutterFlowTheme.of(context).primaryText,
@@ -318,7 +330,16 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   indent: 90,
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),*/
-                SizedBox(height: 60),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    children: [
+                   _buildDivider(),
+                  SizedBox(height: 25),
+                    ]
+                )
+                ),
+                //SizedBox(height: 30),
                 Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 20),
                   child: InkWell(
@@ -341,7 +362,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                         children: [
                           Padding(
                             padding:
-                                EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                                EdgeInsetsDirectional.fromSTEB(20, 0, 0, 0),
                             child: Icon(
                               Icons.bug_report_outlined,
                               color: FlutterFlowTheme.of(context).primaryText,
@@ -414,6 +435,16 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                   indent: 90,
                   color: FlutterFlowTheme.of(context).primaryText,
                 ),*/
+
+                  Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25),
+                  child: Column(
+                    children: [
+                   _buildDivider(),
+                  SizedBox(height: 100),
+                    ]
+                )
+                ),
                 Align(
                   alignment: AlignmentDirectional(0, -1),
                   child: Padding(
@@ -433,7 +464,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                         textStyle: FlutterFlowTheme.of(context).labelMedium,
                         elevation: 0,
                         borderSide: BorderSide(
-                          color: FlutterFlowTheme.of(context).alternate,
+                          color: Color.fromARGB(255, 188, 113, 0)!,
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -454,4 +485,12 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
   );
   
 }
+    Widget _buildDivider() {
+    return Container(
+      height: 1,
+      
+      
+      color: Color.fromARGB(198, 87, 52, 12),
+    );
+  }
 }

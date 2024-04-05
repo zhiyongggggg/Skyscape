@@ -29,15 +29,21 @@ class _AddFavouriteLocationState extends State<AddFavouriteLocation> {
       appBar: AppBar(
         title: const Text('Search for Estates'),
         centerTitle: true,
-        backgroundColor: Colors.orange[300],
+        backgroundColor: Color.fromARGB(255, 255, 197, 111)!,
       ),
       body: Container(
          decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.orange[300]!, Colors.orange[200]!],
-          ),
+                          gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        Color.fromARGB(255, 251, 214, 158)!,
+                        Color.fromARGB(255, 240, 199, 152)!,
+                        Color.fromARGB(255, 246, 186, 122)!,
+                      ],
+                      stops: [0.1, 0.3, 0.5, 0.8],
+                    ),
         ),
         child: Column(
           children: [

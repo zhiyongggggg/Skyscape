@@ -65,7 +65,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange[200],
+      backgroundColor: const Color.fromARGB(255, 255, 241, 219),
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
           return <Widget>[
@@ -75,7 +75,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
 	              'Explore',
               ),
               centerTitle: true,
-              backgroundColor: Colors.amber[400],
+              backgroundColor: Color.fromARGB(255, 255, 197, 111)!,
               elevation: 0.0,
             )
           ];
@@ -83,7 +83,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
         body: Column(
         children: [
           Container(
-            color: Colors.orange[200],
+            color: Color.fromARGB(255, 255, 197, 111)!,
             child: TabBar(
               labelPadding:
                 EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
@@ -100,14 +100,14 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
+                          gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        const Color.fromARGB(255, 255, 225, 181)!,
-                        Colors.orange[100]!,
-                        Color.fromARGB(255, 243, 213, 245)!,
-                        Color.fromARGB(255, 250, 217, 182)!,
+                        Color.fromARGB(174, 242, 186, 101)!,
+                        Color.fromARGB(154, 251, 214, 158)!,
+                        Color.fromARGB(135, 240, 199, 152)!,
+                        Color.fromARGB(140, 246, 186, 122)!,
                       ],
                       stops: [0.1, 0.3, 0.5, 0.8],
                     ),
@@ -243,7 +243,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
           );
         },
         child: const Icon(Icons.camera, size: 30),
-        backgroundColor: Color.fromARGB(255, 255, 178, 83),
+        backgroundColor: Color.fromARGB(234, 255, 255, 255),
       ),
     );
   }

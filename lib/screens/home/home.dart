@@ -177,6 +177,7 @@ class _HomeState extends State<Home> {
         ),
       // ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
           type: BottomNavigationBarType.fixed,
           currentIndex: currentIndex,
           onTap: (index) => setState(() => currentIndex = index),
@@ -213,7 +214,7 @@ class _HomeState extends State<Home> {
                 style: GoogleFonts.lobster(fontSize: 30),
               ),
               centerTitle: true,
-              backgroundColor: Colors.amber[400],
+              backgroundColor: Color.fromARGB(255, 255, 197, 111)!,
               elevation: 0.0,
               leading: IconButton(
                 icon: Icon(Icons.sort), // Change the icon as needed
@@ -244,11 +245,17 @@ class _HomeState extends State<Home> {
         },
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.orange[300]!, Colors.orange[200]!],
-            ),
+                      gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        Color.fromARGB(255, 251, 214, 158)!,
+                        Color.fromARGB(255, 240, 199, 152)!,
+                        Color.fromARGB(255, 246, 186, 122)!,
+                      ],
+                      stops: [0.1, 0.3, 0.5, 0.8],
+                    ),
           ),
           child: Column(
             children: [
