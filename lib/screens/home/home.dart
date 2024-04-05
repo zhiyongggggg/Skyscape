@@ -33,6 +33,7 @@ class _HomeState extends State<Home> {
   DateTime _selectedDate = DateTime.now();
 
   bool isLoading = false; // Flag for loading state
+  bool _isSortedAlphabetically = true; 
 
   void getData(String date) async {
     setState(() {
@@ -136,6 +137,29 @@ class _HomeState extends State<Home> {
     _getFavouritedLocations();
   }
 
+
+  Future<void> _sortLocations() async {
+    setState(() {
+      if (_isSortedAlphabetically) {
+        // Sort by quality of sunset
+        favouritedLocationNames.sort((a, b) => allValues[b]?[5].compareTo(allValues[a]?[5]));
+        _isSortedAlphabetically = false;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar( duration: Duration(seconds: 1), content: Text('Sorted by Quality of Sunset')),
+        );
+      } else {
+        // Sort by alphabetical order
+        favouritedLocationNames.sort();
+        _isSortedAlphabetically = true;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(duration: Duration(seconds: 1), content: Text('Sorted by Alphabetical Order')),
+        );
+      }
+    });
+
+    await DatabaseService(uid: _auth.currentUser!.uid).sortFavouritedLocations(favouritedLocationNames);
+  }
+
   Future<void> _getFavouritedLocations() async {
     List<String> locations = await DatabaseService(uid: _auth.currentUser!.uid)
         .getFavouritedLocations();
@@ -218,12 +242,10 @@ class _HomeState extends State<Home> {
               elevation: 0.0,
               leading: IconButton(
                 icon: Icon(Icons.sort), // Change the icon as needed
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => sortFavouriteLocation(allValues: allValues,)),
-                  );
-                },
+                
+                onPressed: _sortLocations,
+                  
+                
               ),
               actions: <Widget>[
                 if (currentIndex == 0)
