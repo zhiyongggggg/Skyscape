@@ -83,7 +83,19 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
         body: Column(
         children: [
           Container(
-            color: Color.fromARGB(255, 255, 197, 111)!,
+                              decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 255, 197, 111)!,
+                        
+                        
+                        Color.fromARGB(167, 251, 188, 95)!,
+                      ],
+                      stops: [0.3,0.8],
+                    ),
+                  ),
             child: TabBar(
               labelPadding:
                 EdgeInsetsDirectional.fromSTEB(0, 20, 0, 0),
@@ -104,7 +116,7 @@ class _FeedPageState extends State<FeedPage> with SingleTickerProviderStateMixin
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color.fromARGB(174, 242, 186, 101)!,
+                        Color.fromARGB(185, 251, 189, 95)!,
                         Color.fromARGB(154, 251, 214, 158)!,
                         Color.fromARGB(135, 240, 199, 152)!,
                         Color.fromARGB(140, 246, 186, 122)!,
