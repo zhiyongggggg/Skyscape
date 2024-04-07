@@ -18,7 +18,7 @@ import 'package:skyscape/screens/home/viewdetails.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
-
+  
   @override
   State<Home> createState() => _HomeState();
 }
@@ -138,22 +138,22 @@ class _HomeState extends State<Home> {
   }
 
 
-  Future<void> _sortLocations() async {
+  Future<void> _sortLocations(int input) async {
     setState(() {
-      if (_isSortedAlphabetically) {
+      if (input == 0) { 
         // Sort by quality of sunset
-        favouritedLocationNames.sort((a, b) => allValues[b]?[5].compareTo(allValues[a]?[5]));
-        _isSortedAlphabetically = false;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar( duration: Duration(seconds: 1), content: Text('Sorted by Quality of Sunset')),
-        );
+          favouritedLocationNames.sort((a, b) => allValues[b]?[5].compareTo(allValues[a]?[5]));
+          _isSortedAlphabetically = false;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar( duration: Duration(seconds: 1), content: Text('Sorted by Quality of Sunset')),
+          );
       } else {
         // Sort by alphabetical order
-        favouritedLocationNames.sort();
-        _isSortedAlphabetically = true;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(duration: Duration(seconds: 1), content: Text('Sorted by Alphabetical Order')),
-        );
+          favouritedLocationNames.sort();
+          _isSortedAlphabetically = true;
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(duration: Duration(seconds: 1), content: Text('Sorted by Alphabetical Order')),
+          );
       }
     });
 
@@ -177,6 +177,7 @@ class _HomeState extends State<Home> {
       favouritedLocationNames.remove(location);
     });
   }
+
   @override
   Widget build(BuildContext context) {
       
@@ -227,7 +228,11 @@ class _HomeState extends State<Home> {
     );
   }
 
+  
+
   Widget buildHomeScreen() {
+    String _selectedOption = 'Quality';
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxisScrolled) {
@@ -240,13 +245,29 @@ class _HomeState extends State<Home> {
               centerTitle: true,
               backgroundColor: Color.fromARGB(255, 255, 197, 111)!,
               elevation: 0.0,
-              leading: IconButton(
-                icon: Icon(Icons.sort), // Change the icon as needed
-                
-                onPressed: _sortLocations,
-                  
-                
-              ),
+              leading: PopupMenuButton<String>(
+              icon: const Icon(Icons.sort),
+              onSelected: (String value) {
+                setState(() {
+                  _selectedOption = value;
+                  if (value == 'Quality') {
+                    _sortLocations(0);
+                  } else if (value == 'Alphabet') {
+                    _sortLocations(1);
+                  }
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Quality',
+                  child: Text('Quality'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Alphabet',
+                  child: Text('Alphabet'),
+                ),
+              ],
+            ),
               actions: <Widget>[
                 if (currentIndex == 0)
                   FloatingActionButton.small(
