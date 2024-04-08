@@ -177,7 +177,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20, 0, 0, 0),
                                         child: Text(
-                                          'Profile',
+                                          'Personal Feed',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyLarge
                                               .override(
@@ -283,7 +283,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                                         padding: EdgeInsetsDirectional.fromSTEB(
                                             20, 0, 0, 0),
                                         child: Text(
-                                          'Account Settings',
+                                          'Account Details',
                                           style: FlutterFlowTheme.of(context)
                                               .bodyLarge
                                               .override(
@@ -448,7 +448,7 @@ class _ProfileMainWidgetState extends State<ProfileMainWidget> {
                 Align(
                   alignment: AlignmentDirectional(0, -1),
                   child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(0, 64, 0, 0),
+                    padding: EdgeInsetsDirectional.fromSTEB(0, 35, 0, 0),
                     child: FFButtonWidget(
                       onPressed: () async{
                         print("logout button is pressed");

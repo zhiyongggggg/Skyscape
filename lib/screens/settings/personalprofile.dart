@@ -48,7 +48,7 @@ class _PersonalProfileState extends State<PersonalProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal Profile', style: GoogleFonts.lobster(fontSize: 30)),
+        title: Text('Personal Feed', style: GoogleFonts.lobster(fontSize: 30)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.amber[400],
