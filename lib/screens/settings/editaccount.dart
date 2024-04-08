@@ -95,7 +95,6 @@ class _EditAccountState extends State<EditAccount> {
             );
             return;
           }
-
           updateData['username'] = newUsername;
         }
 
@@ -117,7 +116,9 @@ class _EditAccountState extends State<EditAccount> {
         if (updateData.isNotEmpty) {
           await userRef.update(updateData);
         }
-
+        ScaffoldMessenger.of(context).showSnackBar(
+           SnackBar( duration: Duration(seconds: 1), content: Text('Profile Updated')),
+        );
         Navigator.pop(context);
       }
     }
