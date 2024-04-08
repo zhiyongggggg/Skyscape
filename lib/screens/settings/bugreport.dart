@@ -178,7 +178,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color(0xFF6F61EF),
+                              color: Colors.amber,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(0),
@@ -207,7 +207,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
                                 ),
-                        cursorColor: Color(0xFF6F61EF),
+                        cursorColor: Colors.amber[400],
                         validator: _model.textController1Validator
                             .asValidator(context),
                       ),
@@ -241,7 +241,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Color(0xFF6F61EF),
+                              color: Colors.amber,
                               width: 2,
                             ),
                             borderRadius: BorderRadius.circular(0),
@@ -271,7 +271,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                             ),
                         maxLines: 16,
                         minLines: 6,
-                        cursorColor: Color(0xFF6F61EF),
+                        cursorColor: Colors.amber[400],
                         validator: _model.textController2Validator
                             .asValidator(context),
                       ),
@@ -322,7 +322,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                         height: 54,
                         padding: EdgeInsets.all(0),
                         iconPadding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 0),
-                        color: Color(0xFF6F61EF),
+                        color: Colors.amber[400],
                         textStyle:
                             FlutterFlowTheme.of(context).titleSmall.override(
                                   fontFamily: 'Plus Jakarta Sans',
