@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
 
 
 
@@ -216,6 +217,7 @@ class _ReportWidgetState extends State<ReportWidget> {
                         focusNode: _model.textFieldFocusNode2,
                         autofocus: true,
                         obscureText: false,
+                        maxLength: 100,
                         decoration: InputDecoration(
                           labelStyle:
                               FlutterFlowTheme.of(context).labelMedium.override(
@@ -286,6 +288,18 @@ class _ReportWidgetState extends State<ReportWidget> {
                         final email = FirebaseAuth.instance.currentUser?.email;
                         final title = titleController.text;
                         final description = descriptionController.text;
+                        if(!title.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please fill in the title')),
+                          );
+                          return;
+                        }
+                        if(!description.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Please fill in the description')),
+                          );
+                          return;
+                        }
 
                         final bugReport = {
                           '1. email': email,
